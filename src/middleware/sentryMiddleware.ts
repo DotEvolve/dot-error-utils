@@ -24,8 +24,8 @@ export function setupSentryMiddleware(app: any): void {
   app.use((req: Request, res: Response, next: NextFunction) => {
     // Get Sentry trace ID (replaces custom correlation ID)
     const transaction = Sentry.getCurrentHub().getScope().getTransaction();
-    const traceId = transaction?.traceId || 
-                    Sentry.getCurrentHub().getScope().getSpan()?.traceId;
+    const traceId = transaction?.traceId ||
+      Sentry.getCurrentHub().getScope().getSpan()?.traceId;
 
     // Expose as correlationId for backward compatibility
     req.correlationId = traceId || generateFallbackId();
@@ -68,10 +68,10 @@ export function attachSentryContext(
   // Set user context
   if (req.user) {
     Sentry.setUser({
-      id: (req.user as any).id,
-      email: (req.user as any).email,
-      username: (req.user as any).username,
-      role: (req.user as any).role,
+      id: req.user.id,
+      email: req.user.email,
+      username: req.user.username,
+      role: req.user.role,
     });
   }
 
@@ -86,12 +86,12 @@ export function attachSentryContext(
   });
 
   // Set tags for filtering
-  if ((req as any).tenantId) {
-    Sentry.setTag('tenant_id', (req as any).tenantId);
+  if (req.tenantId) {
+    Sentry.setTag('tenant_id', req.tenantId);
   }
 
-  if (req.user && (req.user as any).role) {
-    Sentry.setTag('user_role', (req.user as any).role);
+  if (req.user && req.user.role) {
+    Sentry.setTag('user_role', req.user.role);
   }
 
   next();

@@ -84,15 +84,15 @@ export function errorHandlerMiddleware(
   // Set user context if available
   if (req.user) {
     Sentry.setUser({
-      id: (req.user as any).id,
-      email: (req.user as any).email,
-      role: (req.user as any).role,
+      id: req.user.id,
+      email: req.user.email,
+      role: req.user.role,
     });
   }
 
   // Set tenant context if available
-  if ((req as any).tenantId) {
-    Sentry.setTag('tenant_id', (req as any).tenantId);
+  if (req.tenantId) {
+    Sentry.setTag('tenant_id', req.tenantId);
   }
 
   // Add breadcrumb for error

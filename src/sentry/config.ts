@@ -2,6 +2,22 @@ import * as Sentry from '@sentry/node';
 import { ProfilingIntegration } from '@sentry/profiling-node';
 import { sanitizeData, sanitizeUrl } from '../utils/sanitizer';
 
+declare global {
+  namespace Express {
+    interface Request {
+      correlationId?: string;
+      tenantId?: string;
+      user?: {
+        id?: string;
+        email?: string;
+        username?: string;
+        role?: string;
+        [key: string]: any;
+      };
+    }
+  }
+}
+
 export interface SentryConfig {
   dsn: string;
   environment?: string;
@@ -43,11 +59,11 @@ export function initializeSentry(config: SentryConfig): typeof Sentry {
     integrations: [
       new ProfilingIntegration(),
       new Sentry.Integrations.Http({ tracing: true }),
-      new Sentry.Integrations.Express({ app: true }),
+      new Sentry.Integrations.Express(),
     ],
 
     // Data sanitization
-    beforeSend(event, hint) {
+    beforeSend(event: any, hint: any) {
       // Sanitize request data
       if (event.request?.data) {
         event.request.data = sanitizeData(event.request.data, sensitiveFields);
@@ -62,7 +78,7 @@ export function initializeSentry(config: SentryConfig): typeof Sentry {
     },
 
     // Breadcrumb filtering and sanitization
-    beforeBreadcrumb(breadcrumb, hint) {
+    beforeBreadcrumb(breadcrumb: any, hint: any) {
       if (breadcrumb.category === 'http' && breadcrumb.data?.url) {
         breadcrumb.data.url = sanitizeUrl(breadcrumb.data.url);
       }
