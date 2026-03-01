@@ -35,8 +35,14 @@ var __importStar = (this && this.__importStar) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.initializeSentry = initializeSentry;
 const Sentry = __importStar(require("@sentry/node"));
-const profiling_node_1 = require("@sentry/profiling-node");
 const sanitizer_1 = require("../utils/sanitizer");
+let nodeProfilingIntegration = null;
+try {
+    nodeProfilingIntegration = require("@sentry/profiling-node").nodeProfilingIntegration;
+}
+catch {
+    // Profiling not available (native bindings missing) — disabled gracefully
+}
 /**
  * Initialize Sentry with service-specific configuration
  *
@@ -54,7 +60,9 @@ function initializeSentry(config) {
         tracesSampleRate,
         profilesSampleRate,
         // Integrations
-        integrations: [(0, profiling_node_1.nodeProfilingIntegration)()],
+        integrations: [
+            ...(nodeProfilingIntegration ? [nodeProfilingIntegration()] : []),
+        ],
         // Data sanitization
         beforeSend(event, hint) {
             // Sanitize request data
