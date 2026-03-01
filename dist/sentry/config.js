@@ -55,9 +55,7 @@ function initializeSentry(config) {
         profilesSampleRate,
         // Integrations
         integrations: [
-            new profiling_node_1.ProfilingIntegration(),
-            new Sentry.Integrations.Http({ tracing: true }),
-            new Sentry.Integrations.Express(),
+            (0, profiling_node_1.nodeProfilingIntegration)(),
         ],
         // Data sanitization
         beforeSend(event, hint) {

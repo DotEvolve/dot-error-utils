@@ -7,25 +7,12 @@ import { randomUUID } from 'crypto';
  * Must be first middleware in the chain
  */
 export function setupSentryMiddleware(app: any): void {
-  // Sentry request handler must be first
-  app.use(Sentry.Handlers.requestHandler({
-    // Include user data in events
-    user: ['id', 'email', 'role'],
-    // Include request data
-    request: ['method', 'url', 'headers', 'data'],
-    // Include transaction name
-    transaction: 'methodPath',
-  }));
-
-  // Sentry tracing middleware
-  app.use(Sentry.Handlers.tracingHandler());
+  // In Sentry v8, requestHandler and tracingHandler are auto-instrumented.
 
   // Custom middleware to expose trace ID as correlationId
   app.use((req: Request, res: Response, next: NextFunction) => {
     // Get Sentry trace ID (replaces custom correlation ID)
-    const transaction = Sentry.getCurrentHub().getScope().getTransaction();
-    const traceId = transaction?.traceId ||
-      Sentry.getCurrentHub().getScope().getSpan()?.traceId;
+    const traceId = Sentry.getActiveSpan()?.spanContext().traceId;
 
     // Expose as correlationId for backward compatibility
     req.correlationId = traceId || generateFallbackId();

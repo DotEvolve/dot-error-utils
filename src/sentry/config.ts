@@ -1,5 +1,5 @@
 import * as Sentry from '@sentry/node';
-import { ProfilingIntegration } from '@sentry/profiling-node';
+import { nodeProfilingIntegration } from '@sentry/profiling-node';
 import { sanitizeData, sanitizeUrl } from '../utils/sanitizer';
 
 declare global {
@@ -57,9 +57,7 @@ export function initializeSentry(config: SentryConfig): typeof Sentry {
 
     // Integrations
     integrations: [
-      new ProfilingIntegration(),
-      new Sentry.Integrations.Http({ tracing: true }),
-      new Sentry.Integrations.Express(),
+      nodeProfilingIntegration(),
     ],
 
     // Data sanitization

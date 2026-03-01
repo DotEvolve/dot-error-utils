@@ -149,12 +149,7 @@ function errorHandlerMiddleware(err, req, res, next) {
  * Must be placed after all routes but before custom error handler
  */
 function setupSentryErrorHandler(app) {
-    app.use(Sentry.Handlers.errorHandler({
-        shouldHandleError(error) {
-            // Capture 5xx errors and non-operational errors
-            return error.statusCode >= 500 || !error.isOperational;
-        },
-    }));
+    Sentry.setupExpressErrorHandler(app);
     // Custom error handler after Sentry
     app.use(errorHandlerMiddleware);
 }
