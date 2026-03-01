@@ -6,16 +6,16 @@ exports.sanitizeUrl = sanitizeUrl;
  * Default sensitive field names to redact
  */
 const DEFAULT_SENSITIVE_FIELDS = [
-    'password',
-    'token',
-    'apikey',
-    'api_key',
-    'secret',
-    'authorization',
-    'accesstoken',
-    'refreshtoken',
-    'privatekey',
-    'private_key'
+  "password",
+  "token",
+  "apikey",
+  "api_key",
+  "secret",
+  "authorization",
+  "accesstoken",
+  "refreshtoken",
+  "privatekey",
+  "private_key",
 ];
 /**
  * Sanitize sensitive data by replacing values with '[REDACTED]'
@@ -25,40 +25,44 @@ const DEFAULT_SENSITIVE_FIELDS = [
  * @returns Sanitized copy of the data
  */
 function sanitizeData(data, sensitiveFields = []) {
-    if (!data || typeof data !== 'object') {
-        return data;
+  if (!data || typeof data !== "object") {
+    return data;
+  }
+  const allSensitiveFields = [
+    ...DEFAULT_SENSITIVE_FIELDS,
+    ...sensitiveFields.map((f) => f.toLowerCase()),
+  ];
+  const sanitized = Array.isArray(data) ? [...data] : { ...data };
+  for (const key in sanitized) {
+    const lowerKey = key.toLowerCase();
+    if (allSensitiveFields.some((field) => lowerKey.includes(field))) {
+      sanitized[key] = "[REDACTED]";
+    } else if (typeof sanitized[key] === "object" && sanitized[key] !== null) {
+      sanitized[key] = sanitizeData(sanitized[key], sensitiveFields);
     }
-    const allSensitiveFields = [
-        ...DEFAULT_SENSITIVE_FIELDS,
-        ...sensitiveFields.map(f => f.toLowerCase())
-    ];
-    const sanitized = Array.isArray(data) ? [...data] : { ...data };
-    for (const key in sanitized) {
-        const lowerKey = key.toLowerCase();
-        if (allSensitiveFields.some(field => lowerKey.includes(field))) {
-            sanitized[key] = '[REDACTED]';
-        }
-        else if (typeof sanitized[key] === 'object' && sanitized[key] !== null) {
-            sanitized[key] = sanitizeData(sanitized[key], sensitiveFields);
-        }
-    }
-    return sanitized;
+  }
+  return sanitized;
 }
 /**
  * Sanitize URL by removing sensitive query parameters
  */
 function sanitizeUrl(url) {
-    try {
-        const urlObj = new URL(url);
-        const sensitiveParams = ['token', 'apikey', 'api_key', 'secret', 'password'];
-        sensitiveParams.forEach(param => {
-            if (urlObj.searchParams.has(param)) {
-                urlObj.searchParams.set(param, '[REDACTED]');
-            }
-        });
-        return urlObj.toString();
-    }
-    catch {
-        return url;
-    }
+  try {
+    const urlObj = new URL(url);
+    const sensitiveParams = [
+      "token",
+      "apikey",
+      "api_key",
+      "secret",
+      "password",
+    ];
+    sensitiveParams.forEach((param) => {
+      if (urlObj.searchParams.has(param)) {
+        urlObj.searchParams.set(param, "[REDACTED]");
+      }
+    });
+    return urlObj.toString();
+  } catch {
+    return url;
+  }
 }

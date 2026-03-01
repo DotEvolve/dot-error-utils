@@ -1,4 +1,4 @@
-import { ErrorCategory, ErrorCategoryType } from './ErrorCategory';
+import { ErrorCategory, ErrorCategoryType } from "./ErrorCategory";
 
 /**
  * Base application error class with Sentry integration support
@@ -13,7 +13,7 @@ export class AppError extends Error {
     message: string,
     statusCode: number,
     category: ErrorCategoryType,
-    details: any = null
+    details: any = null,
   ) {
     super(message);
     this.statusCode = statusCode;
@@ -33,7 +33,7 @@ export class AppError extends Error {
       category: this.category,
       statusCode: this.statusCode,
       details: this.details,
-      isOperational: this.isOperational
+      isOperational: this.isOperational,
     };
   }
 }
@@ -51,7 +51,7 @@ export class ValidationError extends AppError {
  * Authentication error (401)
  */
 export class AuthenticationError extends AppError {
-  constructor(message: string = 'Authentication required') {
+  constructor(message: string = "Authentication required") {
     super(message, 401, ErrorCategory.AUTHENTICATION);
   }
 }
@@ -60,7 +60,7 @@ export class AuthenticationError extends AppError {
  * Authorization error (403)
  */
 export class AuthorizationError extends AppError {
-  constructor(message: string = 'Insufficient permissions') {
+  constructor(message: string = "Insufficient permissions") {
     super(message, 403, ErrorCategory.AUTHORIZATION);
   }
 }

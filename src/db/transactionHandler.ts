@@ -1,11 +1,11 @@
-import * as Sentry from '@sentry/node';
+import * as Sentry from "@sentry/node";
 
 /**
  * Prisma transaction wrapper with Sentry performance monitoring
- * 
+ *
  * Automatically tracks transaction duration and captures failures to Sentry
  * Prisma handles rollback automatically on errors
- * 
+ *
  * @param prisma - Prisma client instance
  * @param callback - Transaction callback function
  * @param operationName - Name for Sentry transaction tracking
@@ -14,10 +14,10 @@ import * as Sentry from '@sentry/node';
 export async function withTransaction<T>(
   prisma: any,
   callback: (tx: any) => Promise<T>,
-  operationName: string = 'database_transaction'
+  operationName: string = "database_transaction",
 ): Promise<T> {
   return await Sentry.startSpan(
-    { name: operationName, op: 'db.transaction' },
+    { name: operationName, op: "db.transaction" },
     async () => {
       try {
         // Execute Prisma transaction
@@ -28,9 +28,9 @@ export async function withTransaction<T>(
       } catch (error) {
         // Add breadcrumb for rollback
         Sentry.addBreadcrumb({
-          category: 'transaction',
+          category: "transaction",
           message: `Transaction rolled back: ${operationName}`,
-          level: 'error',
+          level: "error",
           data: {
             operation: operationName,
             error: error instanceof Error ? error.message : String(error),
@@ -41,12 +41,12 @@ export async function withTransaction<T>(
         Sentry.captureException(error, {
           tags: {
             transaction_operation: operationName,
-            transaction_status: 'rolled_back',
+            transaction_status: "rolled_back",
           },
         });
 
         throw error;
       }
-    }
+    },
   );
 }

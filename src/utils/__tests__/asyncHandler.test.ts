@@ -1,13 +1,13 @@
-import { describe, it, expect, vi } from 'vitest';
-import { Request, Response, NextFunction } from 'express';
-import { asyncHandler } from '../asyncHandler';
+import { describe, it, expect, vi } from "vitest";
+import { Request, Response, NextFunction } from "express";
+import { asyncHandler } from "../asyncHandler";
 
-describe('asyncHandler', () => {
-  const mockRequest = () => ({} as Request);
-  const mockResponse = () => ({} as Response);
+describe("asyncHandler", () => {
+  const mockRequest = () => ({}) as Request;
+  const mockResponse = () => ({}) as Response;
   const mockNext = () => vi.fn() as NextFunction;
 
-  it('should call the async function with req, res, next', async () => {
+  it("should call the async function with req, res, next", async () => {
     const asyncFn = vi.fn().mockResolvedValue(undefined);
     const handler = asyncHandler(asyncFn);
     const req = mockRequest();
@@ -20,7 +20,7 @@ describe('asyncHandler', () => {
     expect(asyncFn).toHaveBeenCalledTimes(1);
   });
 
-  it('should not call next when async function succeeds', async () => {
+  it("should not call next when async function succeeds", async () => {
     const asyncFn = vi.fn().mockResolvedValue({ success: true });
     const handler = asyncHandler(asyncFn);
     const req = mockRequest();
@@ -32,8 +32,8 @@ describe('asyncHandler', () => {
     expect(next).not.toHaveBeenCalled();
   });
 
-  it('should call next with error when async function throws', async () => {
-    const error = new Error('Test error');
+  it("should call next with error when async function throws", async () => {
+    const error = new Error("Test error");
     const asyncFn = vi.fn().mockRejectedValue(error);
     const handler = asyncHandler(asyncFn);
     const req = mockRequest();
@@ -46,8 +46,8 @@ describe('asyncHandler', () => {
     expect(next).toHaveBeenCalledTimes(1);
   });
 
-  it('should handle synchronous errors', async () => {
-    const error = new Error('Sync error');
+  it("should handle synchronous errors", async () => {
+    const error = new Error("Sync error");
     const asyncFn = vi.fn().mockImplementation(() => {
       throw error;
     });
@@ -61,8 +61,8 @@ describe('asyncHandler', () => {
     expect(next).toHaveBeenCalledWith(error);
   });
 
-  it('should handle promise rejections', async () => {
-    const error = new Error('Promise rejection');
+  it("should handle promise rejections", async () => {
+    const error = new Error("Promise rejection");
     const asyncFn = vi.fn().mockReturnValue(Promise.reject(error));
     const handler = asyncHandler(asyncFn);
     const req = mockRequest();
@@ -74,8 +74,8 @@ describe('asyncHandler', () => {
     expect(next).toHaveBeenCalledWith(error);
   });
 
-  it('should preserve async function return value', async () => {
-    const returnValue = { data: 'test' };
+  it("should preserve async function return value", async () => {
+    const returnValue = { data: "test" };
     const asyncFn = vi.fn().mockResolvedValue(returnValue);
     const handler = asyncHandler(asyncFn);
     const req = mockRequest();
@@ -88,7 +88,7 @@ describe('asyncHandler', () => {
     expect(asyncFn).toHaveBeenCalled();
   });
 
-  it('should work with multiple sequential calls', async () => {
+  it("should work with multiple sequential calls", async () => {
     const asyncFn = vi.fn().mockResolvedValue(undefined);
     const handler = asyncHandler(asyncFn);
     const req = mockRequest();
@@ -104,8 +104,8 @@ describe('asyncHandler', () => {
     expect(next2).not.toHaveBeenCalled();
   });
 
-  it('should handle different error types', async () => {
-    const stringError = 'String error';
+  it("should handle different error types", async () => {
+    const stringError = "String error";
     const asyncFn = vi.fn().mockRejectedValue(stringError);
     const handler = asyncHandler(asyncFn);
     const req = mockRequest();

@@ -1,6 +1,6 @@
-import * as Sentry from '@sentry/node';
-import { nodeProfilingIntegration } from '@sentry/profiling-node';
-import { sanitizeData, sanitizeUrl } from '../utils/sanitizer';
+import * as Sentry from "@sentry/node";
+import { nodeProfilingIntegration } from "@sentry/profiling-node";
+import { sanitizeData, sanitizeUrl } from "../utils/sanitizer";
 
 declare global {
   namespace Express {
@@ -30,19 +30,19 @@ export interface SentryConfig {
 
 /**
  * Initialize Sentry with service-specific configuration
- * 
+ *
  * @param config - Sentry configuration options
  * @returns Configured Sentry instance
  */
 export function initializeSentry(config: SentryConfig): typeof Sentry {
   const {
     dsn,
-    environment = process.env.NODE_ENV || 'development',
+    environment = process.env.NODE_ENV || "development",
     serviceName,
     release,
-    tracesSampleRate = environment === 'production' ? 0.1 : 1.0,
-    profilesSampleRate = environment === 'production' ? 0.1 : 1.0,
-    sensitiveFields = []
+    tracesSampleRate = environment === "production" ? 0.1 : 1.0,
+    profilesSampleRate = environment === "production" ? 0.1 : 1.0,
+    sensitiveFields = [],
   } = config;
 
   Sentry.init({
@@ -56,9 +56,7 @@ export function initializeSentry(config: SentryConfig): typeof Sentry {
     profilesSampleRate,
 
     // Integrations
-    integrations: [
-      nodeProfilingIntegration(),
-    ],
+    integrations: [nodeProfilingIntegration()],
 
     // Data sanitization
     beforeSend(event: any, hint: any) {
@@ -77,7 +75,7 @@ export function initializeSentry(config: SentryConfig): typeof Sentry {
 
     // Breadcrumb filtering and sanitization
     beforeBreadcrumb(breadcrumb: any, hint: any) {
-      if (breadcrumb.category === 'http' && breadcrumb.data?.url) {
+      if (breadcrumb.category === "http" && breadcrumb.data?.url) {
         breadcrumb.data.url = sanitizeUrl(breadcrumb.data.url);
       }
 
@@ -92,9 +90,9 @@ export function initializeSentry(config: SentryConfig): typeof Sentry {
     // Error filtering
     ignoreErrors: [
       // Ignore known non-critical errors
-      'ECONNRESET',
-      'EPIPE',
-      'ECONNREFUSED',
+      "ECONNRESET",
+      "EPIPE",
+      "ECONNREFUSED",
     ],
   });
 

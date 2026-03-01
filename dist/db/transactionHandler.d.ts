@@ -9,4 +9,8 @@
  * @param operationName - Name for Sentry transaction tracking
  * @returns Result from the transaction callback
  */
-export declare function withTransaction<T>(prisma: any, callback: (tx: any) => Promise<T>, operationName?: string): Promise<T>;
+export declare function withTransaction<T>(
+  prisma: any,
+  callback: (tx: any) => Promise<T>,
+  operationName?: string,
+): Promise<T>;

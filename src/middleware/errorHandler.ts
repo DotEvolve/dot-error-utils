@@ -1,8 +1,8 @@
-import { Request, Response, NextFunction } from 'express';
-import * as Sentry from '@sentry/node';
-import { AppError } from '../errors/AppError';
-import { ErrorCategory } from '../errors/ErrorCategory';
-import { sanitizeData } from '../utils/sanitizer';
+import { Request, Response, NextFunction } from "express";
+import * as Sentry from "@sentry/node";
+import { AppError } from "../errors/AppError";
+import { ErrorCategory } from "../errors/ErrorCategory";
+import { sanitizeData } from "../utils/sanitizer";
 
 /**
  * Error response structure
@@ -35,7 +35,7 @@ function categorizeError(error: any): string {
     401: ErrorCategory.AUTHENTICATION,
     403: ErrorCategory.AUTHORIZATION,
     404: ErrorCategory.NOT_FOUND,
-    409: ErrorCategory.CONFLICT
+    409: ErrorCategory.CONFLICT,
   };
 
   if (error.statusCode && statusMap[error.statusCode]) {
@@ -43,7 +43,7 @@ function categorizeError(error: any): string {
   }
 
   // Network errors
-  if (error.code === 'ECONNREFUSED' || error.code === 'ETIMEDOUT') {
+  if (error.code === "ECONNREFUSED" || error.code === "ETIMEDOUT") {
     return ErrorCategory.SYSTEM;
   }
 
@@ -53,22 +53,22 @@ function categorizeError(error: any): string {
 
 /**
  * Centralized error handler middleware with Sentry integration
- * 
+ *
  * Must be registered after all routes and after Sentry error handler
  */
 export function errorHandlerMiddleware(
   err: any,
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ): void {
   // Set defaults
   const statusCode = err.statusCode || 500;
   const category = categorizeError(err);
-  const correlationId = req.correlationId || 'unknown';
+  const correlationId = req.correlationId || "unknown";
 
   // Set Sentry context
-  Sentry.setContext('error_details', {
+  Sentry.setContext("error_details", {
     category,
     statusCode,
     path: req.path,
@@ -77,9 +77,9 @@ export function errorHandlerMiddleware(
   });
 
   // Set Sentry tags for grouping
-  Sentry.setTag('error_category', category);
-  Sentry.setTag('status_code', statusCode);
-  Sentry.setTag('correlation_id', correlationId);
+  Sentry.setTag("error_category", category);
+  Sentry.setTag("status_code", statusCode);
+  Sentry.setTag("correlation_id", correlationId);
 
   // Set user context if available
   if (req.user) {
@@ -92,14 +92,14 @@ export function errorHandlerMiddleware(
 
   // Set tenant context if available
   if (req.tenantId) {
-    Sentry.setTag('tenant_id', req.tenantId);
+    Sentry.setTag("tenant_id", req.tenantId);
   }
 
   // Add breadcrumb for error
   Sentry.addBreadcrumb({
-    category: 'error',
+    category: "error",
     message: err.message,
-    level: statusCode >= 500 ? 'error' : 'warning',
+    level: statusCode >= 500 ? "error" : "warning",
     data: {
       category,
       statusCode,
@@ -128,14 +128,14 @@ export function errorHandlerMiddleware(
     error: {
       code: category,
       category: category,
-      message: err.message || 'An error occurred',
-      correlationId
+      message: err.message || "An error occurred",
+      correlationId,
     },
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
   };
 
   // Add stack trace in development
-  if (process.env.NODE_ENV === 'development') {
+  if (process.env.NODE_ENV === "development") {
     response.error.stack = err.stack;
   }
 

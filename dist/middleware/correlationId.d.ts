@@ -1,13 +1,13 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response, NextFunction } from "express";
 /**
  * Extend Express Request to include correlationId
  */
 declare global {
-    namespace Express {
-        interface Request {
-            correlationId?: string;
-        }
+  namespace Express {
+    interface Request {
+      correlationId?: string;
     }
+  }
 }
 /**
  * Middleware to generate or preserve correlation IDs for request tracing
@@ -19,4 +19,8 @@ declare global {
  *
  * Must be registered after Sentry request handler
  */
-export declare function correlationIdMiddleware(req: Request, res: Response, next: NextFunction): void;
+export declare function correlationIdMiddleware(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): void;

@@ -28,11 +28,11 @@ npm install github:DotEvolve/dot-error-utils
 ### 1. Initialize Sentry
 
 ```javascript
-const { initializeSentry } = require('@dotevolve/error-utils');
+const { initializeSentry } = require("@dotevolve/error-utils");
 
 initializeSentry({
   dsn: process.env.SENTRY_DSN,
-  serviceName: 'workflow-service',
+  serviceName: "workflow-service",
   environment: process.env.NODE_ENV,
   release: process.env.APP_VERSION,
 });
@@ -41,12 +41,12 @@ initializeSentry({
 ### 2. Setup Express Middleware
 
 ```javascript
-const express = require('express');
+const express = require("express");
 const {
   setupSentryMiddleware,
   setupSentryErrorHandler,
   correlationIdMiddleware,
-} = require('@dotevolve/error-utils');
+} = require("@dotevolve/error-utils");
 
 const app = express();
 
@@ -57,7 +57,7 @@ setupSentryMiddleware(app);
 app.use(correlationIdMiddleware);
 
 // Your routes here
-app.use('/api', routes);
+app.use("/api", routes);
 
 // 3. Error handler (must be last)
 setupSentryErrorHandler(app);
@@ -71,29 +71,32 @@ const {
   NotFoundError,
   AuthorizationError,
   asyncHandler,
-} = require('@dotevolve/error-utils');
+} = require("@dotevolve/error-utils");
 
-app.get('/users/:id', asyncHandler(async (req, res) => {
-  const user = await prisma.user.findUnique({
-    where: { id: req.params.id }
-  });
+app.get(
+  "/users/:id",
+  asyncHandler(async (req, res) => {
+    const user = await prisma.user.findUnique({
+      where: { id: req.params.id },
+    });
 
-  if (!user) {
-    throw new NotFoundError('User', req.params.id);
-  }
+    if (!user) {
+      throw new NotFoundError("User", req.params.id);
+    }
 
-  if (!req.user.canViewUser(user)) {
-    throw new AuthorizationError('Cannot view this user');
-  }
+    if (!req.user.canViewUser(user)) {
+      throw new AuthorizationError("Cannot view this user");
+    }
 
-  res.json({ success: true, data: user });
-}));
+    res.json({ success: true, data: user });
+  }),
+);
 ```
 
 ### 4. Use Transaction Handler
 
 ```javascript
-const { withTransaction } = require('@dotevolve/error-utils');
+const { withTransaction } = require("@dotevolve/error-utils");
 
 async function createWorkflowWithSteps(data) {
   return withTransaction(
@@ -101,11 +104,11 @@ async function createWorkflowWithSteps(data) {
     async (tx) => {
       const workflow = await tx.workflow.create({ data: data.workflow });
       const steps = await tx.workflowStep.createMany({
-        data: data.steps.map(s => ({ ...s, workflowId: workflow.id }))
+        data: data.steps.map((s) => ({ ...s, workflowId: workflow.id })),
       });
       return { workflow, steps };
     },
-    'create_workflow_with_steps'
+    "create_workflow_with_steps",
   );
 }
 ```
@@ -115,6 +118,7 @@ async function createWorkflowWithSteps(data) {
 ### Error Classes
 
 #### `AppError`
+
 Base error class with Sentry integration.
 
 ```typescript
@@ -122,26 +126,31 @@ new AppError(message: string, statusCode: number, category: string, details?: an
 ```
 
 #### `ValidationError` (400)
+
 ```typescript
 new ValidationError(message: string, details?: Record<string, string[]>)
 ```
 
 #### `AuthenticationError` (401)
+
 ```typescript
 new AuthenticationError(message?: string)
 ```
 
 #### `AuthorizationError` (403)
+
 ```typescript
 new AuthorizationError(message?: string)
 ```
 
 #### `NotFoundError` (404)
+
 ```typescript
 new NotFoundError(resource: string, identifier?: string)
 ```
 
 #### `ConflictError` (409)
+
 ```typescript
 new ConflictError(message: string, details?: any)
 ```
@@ -149,31 +158,39 @@ new ConflictError(message: string, details?: any)
 ### Middleware
 
 #### `setupSentryMiddleware(app)`
+
 Sets up Sentry request handler, tracing, and correlation ID middleware.
 
 #### `correlationIdMiddleware`
+
 Generates or preserves correlation IDs for request tracing.
 
 #### `setupSentryErrorHandler(app)`
+
 Sets up Sentry error handler and custom error response middleware.
 
 #### `attachSentryContext`
+
 Attaches user and request context to Sentry events.
 
 ### Utilities
 
 #### `asyncHandler(fn)`
+
 Wraps async route handlers to catch promise rejections.
 
 #### `withTransaction(prisma, callback, operationName)`
+
 Wraps Prisma transactions with Sentry performance monitoring.
 
 #### `sanitizeData(data, sensitiveFields?)`
+
 Sanitizes sensitive data by replacing values with '[REDACTED]'.
 
 ### Sentry Configuration
 
 #### `initializeSentry(config)`
+
 ```typescript
 interface SentryConfig {
   dsn: string;

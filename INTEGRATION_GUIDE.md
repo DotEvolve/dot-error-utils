@@ -43,16 +43,19 @@ npm install github:DotEvolve/dot-error-utils
 ### Option 2: Private npm Package
 
 1. Build the package:
+
 ```bash
 npm run build
 ```
 
 2. Publish to npm (requires npm organization):
+
 ```bash
 npm publish --access restricted
 ```
 
 3. Install in other services:
+
 ```bash
 npm install @dotevolve/error-utils
 ```
@@ -62,6 +65,7 @@ npm install @dotevolve/error-utils
 ### Backend Services (Node.js/Express)
 
 Services to integrate:
+
 - dot-cos-api-gateway
 - dot-cos-workflow-service
 - dot-cos-rule-engine-service
@@ -76,12 +80,12 @@ npm install @dotevolve/error-utils @sentry/node @sentry/profiling-node
 #### Step 2: Initialize Sentry (app.js or index.js)
 
 ```javascript
-const { initializeSentry } = require('@dotevolve/error-utils');
+const { initializeSentry } = require("@dotevolve/error-utils");
 
 // Initialize Sentry FIRST (before any other code)
 initializeSentry({
   dsn: process.env.SENTRY_DSN,
-  serviceName: 'workflow-service', // Change per service
+  serviceName: "workflow-service", // Change per service
   environment: process.env.NODE_ENV,
   release: process.env.npm_package_version,
 });
@@ -90,12 +94,12 @@ initializeSentry({
 #### Step 3: Setup Middleware
 
 ```javascript
-const express = require('express');
+const express = require("express");
 const {
   setupSentryMiddleware,
   setupSentryErrorHandler,
   correlationIdMiddleware,
-} = require('@dotevolve/error-utils');
+} = require("@dotevolve/error-utils");
 
 const app = express();
 
@@ -112,7 +116,7 @@ app.use(correlationIdMiddleware);
 app.use(authMiddleware);
 
 // 4. Your routes
-app.use('/api/v1', routes);
+app.use("/api/v1", routes);
 
 // 5. Error handler (MUST BE LAST)
 setupSentryErrorHandler(app);
@@ -130,16 +134,16 @@ const {
   NotFoundError,
   AuthorizationError,
   asyncHandler,
-} = require('@dotevolve/error-utils');
+} = require("@dotevolve/error-utils");
 
 // Before:
-app.get('/workflows/:id', async (req, res) => {
+app.get("/workflows/:id", async (req, res) => {
   try {
     const workflow = await prisma.workflow.findUnique({
-      where: { id: req.params.id }
+      where: { id: req.params.id },
     });
     if (!workflow) {
-      return res.status(404).json({ error: 'Not found' });
+      return res.status(404).json({ error: "Not found" });
     }
     res.json(workflow);
   } catch (error) {
@@ -148,23 +152,26 @@ app.get('/workflows/:id', async (req, res) => {
 });
 
 // After:
-app.get('/workflows/:id', asyncHandler(async (req, res) => {
-  const workflow = await prisma.workflow.findUnique({
-    where: { id: req.params.id }
-  });
-  
-  if (!workflow) {
-    throw new NotFoundError('Workflow', req.params.id);
-  }
-  
-  res.json({ success: true, data: workflow });
-}));
+app.get(
+  "/workflows/:id",
+  asyncHandler(async (req, res) => {
+    const workflow = await prisma.workflow.findUnique({
+      where: { id: req.params.id },
+    });
+
+    if (!workflow) {
+      throw new NotFoundError("Workflow", req.params.id);
+    }
+
+    res.json({ success: true, data: workflow });
+  }),
+);
 ```
 
 #### Step 5: Update Prisma Transactions
 
 ```javascript
-const { withTransaction } = require('@dotevolve/error-utils');
+const { withTransaction } = require("@dotevolve/error-utils");
 
 // Before:
 async function createWorkflow(data) {
@@ -182,7 +189,7 @@ async function createWorkflow(data) {
       const workflow = await tx.workflow.create({ data });
       return workflow;
     },
-    'create_workflow'
+    "create_workflow",
   );
 }
 ```
@@ -210,18 +217,19 @@ npm install @sentry/react @sentry/vite-plugin
 
 ```typescript
 // vite.config.ts
-import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
-import { sentryVitePlugin } from '@sentry/vite-plugin';
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+import { sentryVitePlugin } from "@sentry/vite-plugin";
 
 export default defineConfig({
   plugins: [
     react(),
-    process.env.NODE_ENV === 'production' && sentryVitePlugin({
-      org: process.env.SENTRY_ORG,
-      project: process.env.SENTRY_PROJECT,
-      authToken: process.env.SENTRY_AUTH_TOKEN,
-    }),
+    process.env.NODE_ENV === "production" &&
+      sentryVitePlugin({
+        org: process.env.SENTRY_ORG,
+        project: process.env.SENTRY_PROJECT,
+        authToken: process.env.SENTRY_AUTH_TOKEN,
+      }),
   ].filter(Boolean),
   build: {
     sourcemap: true,
@@ -233,7 +241,7 @@ export default defineConfig({
 
 ```typescript
 // src/main.tsx
-import * as Sentry from '@sentry/react';
+import * as Sentry from "@sentry/react";
 
 Sentry.init({
   dsn: import.meta.env.VITE_SENTRY_DSN,
@@ -278,7 +286,7 @@ Sentry.init({
   environment: import.meta.env.MODE,
   release: import.meta.env.VITE_APP_VERSION,
   tracesSampleRate: 1.0,
-  
+
   // Add data sanitization
   beforeSend(event, hint) {
     // Remove sensitive data
@@ -302,6 +310,7 @@ curl -X GET http://localhost:3000/api/v1/workflows/invalid-id
 ```
 
 Expected response:
+
 ```json
 {
   "success": false,
@@ -326,10 +335,14 @@ Expected response:
 
 ```javascript
 // This should rollback and not create partial data
-await withTransaction(prisma, async (tx) => {
-  await tx.workflow.create({ data: workflowData });
-  throw new Error('Simulated failure'); // Should rollback workflow creation
-}, 'test_rollback');
+await withTransaction(
+  prisma,
+  async (tx) => {
+    await tx.workflow.create({ data: workflowData });
+    throw new Error("Simulated failure"); // Should rollback workflow creation
+  },
+  "test_rollback",
+);
 ```
 
 ## Rollout Strategy
@@ -354,15 +367,18 @@ await withTransaction(prisma, async (tx) => {
 ## Troubleshooting
 
 ### Sentry not capturing errors
+
 - Check SENTRY_DSN is set correctly
 - Verify `initializeSentry()` is called before any other code
 - Check error is 500+ or non-operational
 
 ### Correlation ID not appearing
+
 - Verify `setupSentryMiddleware()` is called before routes
 - Check response headers for X-Correlation-Id
 
 ### Transaction not rolling back
+
 - Ensure using `withTransaction` wrapper
 - Check Prisma transaction syntax
 - Verify error is thrown inside transaction callback
@@ -370,6 +386,7 @@ await withTransaction(prisma, async (tx) => {
 ## Next Steps
 
 After integration:
+
 1. Monitor Sentry dashboard for error patterns
 2. Set up Sentry alerts for critical errors
 3. Review and tune tracesSampleRate for production

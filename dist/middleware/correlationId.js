@@ -13,10 +13,11 @@ const crypto_1 = require("crypto");
  * Must be registered after Sentry request handler
  */
 function correlationIdMiddleware(req, res, next) {
-    // Generate new ID or use existing from header
-    req.correlationId = req.headers['x-correlation-id'] || (0, crypto_1.randomUUID)();
-    // Set response header for client
-    res.setHeader('X-Correlation-Id', req.correlationId);
-    res.setHeader('X-Sentry-Trace-Id', req.correlationId);
-    next();
+  // Generate new ID or use existing from header
+  req.correlationId =
+    req.headers["x-correlation-id"] || (0, crypto_1.randomUUID)();
+  // Set response header for client
+  res.setHeader("X-Correlation-Id", req.correlationId);
+  res.setHeader("X-Sentry-Trace-Id", req.correlationId);
+  next();
 }

@@ -1,6 +1,6 @@
-import * as Sentry from '@sentry/node';
-import { Request, Response, NextFunction } from 'express';
-import { randomUUID } from 'crypto';
+import * as Sentry from "@sentry/node";
+import { Request, Response, NextFunction } from "express";
+import { randomUUID } from "crypto";
 
 /**
  * Setup Sentry request and tracing middleware
@@ -18,14 +18,14 @@ export function setupSentryMiddleware(app: any): void {
     req.correlationId = traceId || generateFallbackId();
 
     // Set response headers
-    res.setHeader('X-Correlation-Id', req.correlationId);
-    res.setHeader('X-Sentry-Trace-Id', req.correlationId);
+    res.setHeader("X-Correlation-Id", req.correlationId);
+    res.setHeader("X-Sentry-Trace-Id", req.correlationId);
 
     // Add breadcrumb for request
     Sentry.addBreadcrumb({
-      category: 'request',
+      category: "request",
       message: `${req.method} ${req.path}`,
-      level: 'info',
+      level: "info",
       data: {
         method: req.method,
         url: req.url,
@@ -50,7 +50,7 @@ function generateFallbackId(): string {
 export function attachSentryContext(
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ): void {
   // Set user context
   if (req.user) {
@@ -63,7 +63,7 @@ export function attachSentryContext(
   }
 
   // Set custom context
-  Sentry.setContext('request_details', {
+  Sentry.setContext("request_details", {
     correlationId: req.correlationId,
     tenantId: (req as any).tenantId,
     path: req.path,
@@ -74,11 +74,11 @@ export function attachSentryContext(
 
   // Set tags for filtering
   if (req.tenantId) {
-    Sentry.setTag('tenant_id', req.tenantId);
+    Sentry.setTag("tenant_id", req.tenantId);
   }
 
   if (req.user && req.user.role) {
-    Sentry.setTag('user_role', req.user.role);
+    Sentry.setTag("user_role", req.user.role);
   }
 
   next();

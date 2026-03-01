@@ -3,6 +3,7 @@
 ## Current Status
 
 ### Completed ✅
+
 1. **Vitest Configuration** - `vitest.config.ts` created with 95% coverage thresholds
 2. **Error Classes Tests** - `src/errors/__tests__/AppError.test.ts` (100% coverage)
 3. **Error Category Tests** - `src/errors/__tests__/ErrorCategory.test.ts` (100% coverage)
@@ -12,37 +13,43 @@
 ### Remaining Tests to Write
 
 #### 1. Middleware Tests
+
 - **correlationId.test.ts** - Test correlation ID generation and preservation
 - **errorHandler.test.ts** - Test error handler middleware with Sentry mocking
 - **sentryMiddleware.test.ts** - Test Sentry middleware setup
 
 #### 2. Database Tests
+
 - **transactionHandler.test.ts** - Test Prisma transaction wrapper with Sentry
 
 #### 3. Sentry Configuration Tests
+
 - **config.test.ts** - Test Sentry initialization
 
 #### 4. Integration Tests
+
 - **integration.test.ts** - End-to-end tests with Express app
 
 ## Test Coverage Goals
 
-| Module | Target Coverage | Status |
-|--------|----------------|--------|
-| errors/AppError.ts | 100% | ✅ Complete |
-| errors/ErrorCategory.ts | 100% | ✅ Complete |
-| utils/sanitizer.ts | 100% | ✅ Complete |
-| utils/asyncHandler.ts | 100% | ✅ Complete |
-| middleware/correlationId.ts | 95% | 🔄 Pending |
-| middleware/errorHandler.ts | 95% | 🔄 Pending |
-| middleware/sentryMiddleware.ts | 90% | 🔄 Pending |
-| sentry/config.ts | 90% | 🔄 Pending |
-| db/transactionHandler.ts | 95% | 🔄 Pending |
+| Module                         | Target Coverage | Status      |
+| ------------------------------ | --------------- | ----------- |
+| errors/AppError.ts             | 100%            | ✅ Complete |
+| errors/ErrorCategory.ts        | 100%            | ✅ Complete |
+| utils/sanitizer.ts             | 100%            | ✅ Complete |
+| utils/asyncHandler.ts          | 100%            | ✅ Complete |
+| middleware/correlationId.ts    | 95%             | 🔄 Pending  |
+| middleware/errorHandler.ts     | 95%             | 🔄 Pending  |
+| middleware/sentryMiddleware.ts | 90%             | 🔄 Pending  |
+| sentry/config.ts               | 90%             | 🔄 Pending  |
+| db/transactionHandler.ts       | 95%             | 🔄 Pending  |
 
 ## Comments and Logging Requirements
 
 ### 1. Add JSDoc Comments
+
 All functions need comprehensive JSDoc comments including:
+
 - Function description
 - @param tags for all parameters
 - @returns tag for return values
@@ -50,13 +57,16 @@ All functions need comprehensive JSDoc comments including:
 - @example tag for usage examples
 
 ### 2. Add Logging
+
 Implement structured logging using a logger (e.g., winston or pino):
+
 - Log all error captures to Sentry
 - Log correlation ID generation
 - Log transaction start/end
 - Log middleware initialization
 
 ### 3. Code Documentation
+
 - Add inline comments for complex logic
 - Document all configuration options
 - Add README sections for each module
@@ -64,6 +74,7 @@ Implement structured logging using a logger (e.g., winston or pino):
 ## Next Steps
 
 1. **Install Missing Dependencies**
+
    ```bash
    npm install --save-dev @vitest/coverage-v8
    ```
@@ -80,6 +91,7 @@ Implement structured logging using a logger (e.g., winston or pino):
    - Add inline comments for complex logic
 
 4. **Run Coverage Report**
+
    ```bash
    npm test -- --coverage
    ```
@@ -92,8 +104,9 @@ Implement structured logging using a logger (e.g., winston or pino):
 ## Mocking Strategy
 
 ### Sentry Mocking
+
 ```typescript
-vi.mock('@sentry/node', () => ({
+vi.mock("@sentry/node", () => ({
   init: vi.fn(),
   captureException: vi.fn(),
   addBreadcrumb: vi.fn(),
@@ -107,14 +120,16 @@ vi.mock('@sentry/node', () => ({
 ```
 
 ### Express Mocking
+
 ```typescript
-const mockRequest = (overrides = {}) => ({
-  headers: {},
-  body: {},
-  query: {},
-  params: {},
-  ...overrides,
-} as Request);
+const mockRequest = (overrides = {}) =>
+  ({
+    headers: {},
+    body: {},
+    query: {},
+    params: {},
+    ...overrides,
+  }) as Request;
 
 const mockResponse = () => {
   const res = {} as Response;
@@ -126,6 +141,7 @@ const mockResponse = () => {
 ```
 
 ### Prisma Mocking
+
 ```typescript
 const mockPrisma = {
   $transaction: vi.fn((callback) => callback(mockPrisma)),
@@ -135,16 +151,19 @@ const mockPrisma = {
 ## Documentation Improvements
 
 ### 1. README Enhancements
+
 - Add usage examples for each module
 - Add troubleshooting section
 - Add API reference
 
 ### 2. Integration Guide Updates
+
 - Add testing section
 - Add mocking examples
 - Add best practices
 
 ### 3. Code Comments
+
 - Add file-level comments explaining module purpose
 - Add section comments for grouped functionality
 - Add inline comments for complex algorithms
