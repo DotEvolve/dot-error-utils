@@ -1,0 +1,23 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.asyncHandler = asyncHandler;
+/**
+ * Async handler wrapper to eliminate try-catch boilerplate
+ *
+ * Wraps async route handlers and forwards errors to error handler middleware
+ *
+ * @param fn - Async route handler function
+ * @returns Express middleware function
+ *
+ * @example
+ * app.get('/users/:id', asyncHandler(async (req, res) => {
+ *   const user = await getUserById(req.params.id);
+ *   if (!user) throw new NotFoundError('User', req.params.id);
+ *   res.json({ success: true, data: user });
+ * }));
+ */
+function asyncHandler(fn) {
+    return (req, res, next) => {
+        Promise.resolve(fn(req, res, next)).catch(next);
+    };
+}
