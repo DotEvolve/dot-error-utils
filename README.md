@@ -259,12 +259,17 @@ Whenever a push is made to the `master` branch, the [publish.yml](.github/workfl
 4. Publish to NPM under the `@dotevolve` scope.
 
 ### Configuration
-To enable automated publishing, you must add an `NPM_TOKEN` to your GitHub repository secrets:
+To enable automated publishing, you must configure a GitHub Environment:
 1. Go to your repository on GitHub.
-2. Navigate to **Settings** -> **Secrets and variables** -> **Actions**.
-3. Click **New repository secret**.
-4. Name: `NPM_TOKEN`
-5. Value: Your npm automation token (Granular or Classic).
+2. Navigate to **Settings** -> **Environments**.
+3. Click **New environment** and name it `production`.
+4. (Optional) Add **Deployment protection rules** like "Required reviewers" for manual approval.
+5. In the `production` environment, click **Add secret**.
+6. Name: `NPM_TOKEN`
+7. Value: Your npm automation token.
+
+> [!NOTE]
+> By using an environment, you can control which branches can deploy and require manual sign-off before publishing to NPM.
 
 ## License
 
