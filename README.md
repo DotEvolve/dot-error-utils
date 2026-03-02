@@ -249,14 +249,16 @@ SENSITIVE_FIELDS=customField1,customField2
 
 ## CI/CD
 
-This package uses GitHub Actions for automated publishing to NPM.
+This package uses GitHub Actions for CI (testing) and CD (publishing).
 
-### Automated Publishing
-Whenever a push is made to the `master` branch, the [publish.yml](.github/workflows/publish.yml) workflow will:
-1. Install dependencies (`npm ci`)
-2. Run tests (`npm test`)
-3. Build the package (`npm run build`)
-4. Publish to NPM under the `@dotevolve` scope.
+### Branching Strategy
+- `master`: Production-ready branch. Pushes to this branch trigger an NPM publish.
+- `dev`: Development branch. All feature work should be merged here first.
+- **Pull Requests**: Pull requests should be raised from feature branches to `dev` or from `dev` to `master`.
+
+### Workflows
+1. **CI** ([ci.yml](.github/workflows/ci.yml)): Runs on pushes to `dev` and pull requests to `master`. It performs `npm test` and `npm build`.
+2. **Publish** ([publish.yml](.github/workflows/publish.yml)): Runs only on pushes to `master`. It performs `npm test`, `npm build`, and `npm publish`.
 
 ### Configuration
 To enable automated publishing, you must configure a GitHub Environment:
