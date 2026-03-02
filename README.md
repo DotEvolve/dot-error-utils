@@ -247,6 +247,25 @@ SENSITIVE_FIELDS=customField1,customField2
 5. **Set correlation ID** in inter-service HTTP calls
 6. **Don't capture validation errors** to Sentry (they're user errors, not system errors)
 
+## CI/CD
+
+This package uses GitHub Actions for automated publishing to NPM.
+
+### Automated Publishing
+Whenever a push is made to the `master` branch, the [publish.yml](.github/workflows/publish.yml) workflow will:
+1. Install dependencies (`npm ci`)
+2. Run tests (`npm test`)
+3. Build the package (`npm run build`)
+4. Publish to NPM under the `@dotevolve` scope.
+
+### Configuration
+To enable automated publishing, you must add an `NPM_TOKEN` to your GitHub repository secrets:
+1. Go to your repository on GitHub.
+2. Navigate to **Settings** -> **Secrets and variables** -> **Actions**.
+3. Click **New repository secret**.
+4. Name: `NPM_TOKEN`
+5. Value: Your npm automation token (Granular or Classic).
+
 ## License
 
 ISC
