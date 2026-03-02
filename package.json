@@ -1,7 +1,7 @@
 {
   "name": "@dotevolve/error-utils",
-  "version": "1.0.0",
-  "description": "Shared error handling utilities with Sentry integration for dot-cOS services",
+  "version": "1.0.1",
+  "description": "Shared error handling utilities with Sentry integration for Node.js and Express services",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
