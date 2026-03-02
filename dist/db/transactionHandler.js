@@ -46,7 +46,16 @@ const Sentry = __importStar(require("@sentry/node"));
  * @param operationName - Name for Sentry transaction tracking
  * @returns Result from the transaction callback
  */
-async function withTransaction(prisma, callback, operationName = "database_transaction") {
+async function withTransaction(
+/**
+ * Asynchronously with transaction
+ *
+ * @param {any} prisma - The prisma
+ * @param {Function} callback - Callback function
+ * @param {string} operationName="database_transaction" - The operation name
+ * @returns {Promise} The Promise
+ */
+prisma, callback, operationName = "database_transaction") {
     return await Sentry.startSpan({ name: operationName, op: "db.transaction" }, async () => {
         try {
             // Execute Prisma transaction

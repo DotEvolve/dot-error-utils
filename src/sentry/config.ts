@@ -41,6 +41,12 @@ export interface SentryConfig {
  * @returns Configured Sentry instance
  */
 export function initializeSentry(config: SentryConfig): typeof Sentry {
+  /**
+   * Initialize Sentry
+   *
+   * @param {SentryConfig} config - Configuration options
+   * @returns {any} The any
+   */
   const {
     dsn,
     environment = process.env.NODE_ENV || "development",

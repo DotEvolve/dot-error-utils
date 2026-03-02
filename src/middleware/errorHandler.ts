@@ -57,6 +57,14 @@ function categorizeError(error: any): string {
  * Must be registered after all routes and after Sentry error handler
  */
 export function errorHandlerMiddleware(
+  /**
+   * Error Handler Middleware
+   *
+   * @param {any} err - Error object
+   * @param {Request} req - HTTP request object
+   * @param {Response} res - HTTP response object
+   * @param {NextFunction} next - Next middleware function
+   */
   err: any,
   req: Request,
   res: Response,
@@ -152,6 +160,11 @@ export function errorHandlerMiddleware(
  * Must be placed after all routes but before custom error handler
  */
 export function setupSentryErrorHandler(app: any): void {
+  /**
+   * Sets setup sentry error handler
+   *
+   * @param {any} app - The app
+   */
   Sentry.setupExpressErrorHandler(app);
 
   // Custom error handler after Sentry

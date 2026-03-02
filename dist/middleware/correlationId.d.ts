@@ -19,4 +19,12 @@ declare global {
  *
  * Must be registered after Sentry request handler
  */
-export declare function correlationIdMiddleware(req: Request, res: Response, next: NextFunction): void;
+export declare function correlationIdMiddleware(
+/**
+ * Correlation Id Middleware
+ *
+ * @param {Request} req - HTTP request object
+ * @param {Response} res - HTTP response object
+ * @param {NextFunction} next - Next middleware function
+ */
+req: Request, res: Response, next: NextFunction): void;

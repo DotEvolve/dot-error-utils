@@ -69,7 +69,16 @@ function categorizeError(error) {
  *
  * Must be registered after all routes and after Sentry error handler
  */
-function errorHandlerMiddleware(err, req, res, next) {
+function errorHandlerMiddleware(
+/**
+ * Error Handler Middleware
+ *
+ * @param {any} err - Error object
+ * @param {Request} req - HTTP request object
+ * @param {Response} res - HTTP response object
+ * @param {NextFunction} next - Next middleware function
+ */
+err, req, res, next) {
     // Set defaults
     const statusCode = err.statusCode || 500;
     const category = categorizeError(err);
@@ -149,6 +158,11 @@ function errorHandlerMiddleware(err, req, res, next) {
  * Must be placed after all routes but before custom error handler
  */
 function setupSentryErrorHandler(app) {
+    /**
+     * Sets setup sentry error handler
+     *
+     * @param {any} app - The app
+     */
     Sentry.setupExpressErrorHandler(app);
     // Custom error handler after Sentry
     app.use(errorHandlerMiddleware);

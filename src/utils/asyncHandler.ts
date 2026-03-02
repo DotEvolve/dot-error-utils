@@ -16,6 +16,11 @@ import { Request, Response, NextFunction } from "express";
  * }));
  */
 export function asyncHandler(
+  /**
+   * Async Handler
+   *
+   * @param {Function} fn - Function to fn
+   */
   fn: (req: Request, res: Response, next: NextFunction) => Promise<any>,
 ) {
   return (req: Request, res: Response, next: NextFunction) => {

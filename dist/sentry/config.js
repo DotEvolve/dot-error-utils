@@ -50,6 +50,12 @@ catch {
  * @returns Configured Sentry instance
  */
 function initializeSentry(config) {
+    /**
+     * Initialize Sentry
+     *
+     * @param {SentryConfig} config - Configuration options
+     * @returns {any} The any
+     */
     const { dsn, environment = process.env.NODE_ENV || "development", serviceName, release, tracesSampleRate = environment === "production" ? 0.1 : 1.0, profilesSampleRate = environment === "production" ? 0.1 : 1.0, sensitiveFields = [], } = config;
     Sentry.init({
         dsn,

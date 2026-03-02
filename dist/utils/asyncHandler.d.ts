@@ -14,4 +14,10 @@ import { Request, Response, NextFunction } from "express";
  *   res.json({ success: true, data: user });
  * }));
  */
-export declare function asyncHandler(fn: (req: Request, res: Response, next: NextFunction) => Promise<any>): (req: Request, res: Response, next: NextFunction) => void;
+export declare function asyncHandler(
+/**
+ * Async Handler
+ *
+ * @param {Function} fn - Function to fn
+ */
+fn: (req: Request, res: Response, next: NextFunction) => Promise<any>): (req: Request, res: Response, next: NextFunction) => void;

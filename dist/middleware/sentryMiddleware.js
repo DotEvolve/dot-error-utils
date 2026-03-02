@@ -42,6 +42,11 @@ const crypto_1 = require("crypto");
  * Must be first middleware in the chain
  */
 function setupSentryMiddleware(app) {
+    /**
+     * Sets setup sentry middleware
+     *
+     * @param {any} app - The app
+     */
     // In Sentry v8, requestHandler and tracingHandler are auto-instrumented.
     // Custom middleware to expose trace ID as correlationId
     app.use((req, res, next) => {
@@ -75,7 +80,15 @@ function generateFallbackId() {
 /**
  * Attach Sentry context for user and request details
  */
-function attachSentryContext(req, res, next) {
+function attachSentryContext(
+/**
+ * Attach Sentry Context
+ *
+ * @param {Request} req - HTTP request object
+ * @param {Response} res - HTTP response object
+ * @param {NextFunction} next - Next middleware function
+ */
+req, res, next) {
     // Set user context
     if (req.user) {
         Sentry.setUser({

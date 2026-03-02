@@ -16,7 +16,13 @@ exports.asyncHandler = asyncHandler;
  *   res.json({ success: true, data: user });
  * }));
  */
-function asyncHandler(fn) {
+function asyncHandler(
+/**
+ * Async Handler
+ *
+ * @param {Function} fn - Function to fn
+ */
+fn) {
     return (req, res, next) => {
         Promise.resolve(fn(req, res, next)).catch(next);
     };

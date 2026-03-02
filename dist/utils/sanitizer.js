@@ -25,6 +25,13 @@ const DEFAULT_SENSITIVE_FIELDS = [
  * @returns Sanitized copy of the data
  */
 function sanitizeData(data, sensitiveFields = []) {
+    /**
+     * Sanitize Data
+     *
+     * @param {any} data - The data to process
+     * @param {string[]} sensitiveFields=[] - Array of sensitive fields
+     * @returns {any} The any
+     */
     if (!data || typeof data !== "object") {
         return data;
     }
@@ -48,6 +55,12 @@ function sanitizeData(data, sensitiveFields = []) {
  * Sanitize URL by removing sensitive query parameters
  */
 function sanitizeUrl(url) {
+    /**
+     * Sanitize Url
+     *
+     * @param {string} url - The url
+     * @returns {string} String result
+     */
     try {
         const urlObj = new URL(url);
         const sensitiveParams = [
