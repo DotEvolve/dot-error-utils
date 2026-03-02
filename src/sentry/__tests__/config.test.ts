@@ -16,9 +16,7 @@ vi.mock("@sentry/node", () => ({
   setupExpressErrorHandler: vi.fn(),
 }));
 
-vi.mock("@sentry/profiling-node", () => ({
-  nodeProfilingIntegration: vi.fn(() => ({ name: "ProfilingIntegration" })),
-}));
+// Sentry and profiling are now mocked in src/__tests__/setup.ts
 
 vi.mock("../../utils/sanitizer", () => ({
   sanitizeData: vi.fn((data) => ({ ...data, sanitized: true })),
