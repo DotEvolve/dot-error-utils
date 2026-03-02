@@ -12,6 +12,11 @@ export function setupSentryMiddleware(app: any): void {
    *
    * @param {any} app - The app
    */
+  /**
+   * Sets setup sentry middleware
+   *
+   * @param {any} app - The app
+   */
   // In Sentry v8, requestHandler and tracingHandler are auto-instrumented.
 
   // Custom middleware to expose trace ID as correlationId
@@ -53,6 +58,13 @@ function generateFallbackId(): string {
  * Attach Sentry context for user and request details
  */
 export function attachSentryContext(
+  /**
+   * Attach Sentry Context
+   *
+   * @param {Request} req - HTTP request object
+   * @param {Response} res - HTTP response object
+   * @param {NextFunction} next - Next middleware function
+   */
   /**
    * Attach Sentry Context
    *

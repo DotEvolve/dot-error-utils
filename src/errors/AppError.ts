@@ -8,18 +8,21 @@ export class AppError extends Error {
   public readonly category: ErrorCategoryType;
   public readonly details: any;
   public readonly isOperational: boolean;
+  public readonly correlationId?: string;
 
   constructor(
     message: string,
     statusCode: number,
     category: ErrorCategoryType,
     details: any = null,
+    correlationId?: string,
   ) {
     super(message);
     this.statusCode = statusCode;
     this.category = category;
     this.details = details;
     this.isOperational = true;
+    this.correlationId = correlationId;
 
     // Maintains proper stack trace for where our error was thrown
     Error.captureStackTrace(this, this.constructor);
@@ -34,6 +37,7 @@ export class AppError extends Error {
       statusCode: this.statusCode,
       details: this.details,
       isOperational: this.isOperational,
+      correlationId: this.correlationId,
     };
   }
 }
@@ -42,8 +46,8 @@ export class AppError extends Error {
  * Validation error (400)
  */
 export class ValidationError extends AppError {
-  constructor(message: string, details?: Record<string, string[]>) {
-    super(message, 400, ErrorCategory.VALIDATION, details);
+  constructor(message: string, details?: Record<string, string[]>, correlationId?: string) {
+    super(message, 400, ErrorCategory.VALIDATION, details, correlationId);
   }
 }
 
@@ -51,8 +55,8 @@ export class ValidationError extends AppError {
  * Authentication error (401)
  */
 export class AuthenticationError extends AppError {
-  constructor(message: string = "Authentication required") {
-    super(message, 401, ErrorCategory.AUTHENTICATION);
+  constructor(message: string = "Authentication required", correlationId?: string) {
+    super(message, 401, ErrorCategory.AUTHENTICATION, undefined, correlationId);
   }
 }
 
@@ -60,8 +64,8 @@ export class AuthenticationError extends AppError {
  * Authorization error (403)
  */
 export class AuthorizationError extends AppError {
-  constructor(message: string = "Insufficient permissions") {
-    super(message, 403, ErrorCategory.AUTHORIZATION);
+  constructor(message: string = "Insufficient permissions", correlationId?: string) {
+    super(message, 403, ErrorCategory.AUTHORIZATION, undefined, correlationId);
   }
 }
 
@@ -69,11 +73,11 @@ export class AuthorizationError extends AppError {
  * Not found error (404)
  */
 export class NotFoundError extends AppError {
-  constructor(resource: string, identifier?: string) {
+  constructor(resource: string, identifier?: string, correlationId?: string) {
     const message = identifier
       ? `${resource} not found: ${identifier}`
       : `${resource} not found`;
-    super(message, 404, ErrorCategory.NOT_FOUND);
+    super(message, 404, ErrorCategory.NOT_FOUND, undefined, correlationId);
   }
 }
 

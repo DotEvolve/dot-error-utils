@@ -65,6 +65,14 @@ export function errorHandlerMiddleware(
    * @param {Response} res - HTTP response object
    * @param {NextFunction} next - Next middleware function
    */
+  /**
+   * Error Handler Middleware
+   *
+   * @param {any} err - Error object
+   * @param {Request} req - HTTP request object
+   * @param {Response} res - HTTP response object
+   * @param {NextFunction} next - Next middleware function
+   */
   err: any,
   req: Request,
   res: Response,
@@ -160,6 +168,11 @@ export function errorHandlerMiddleware(
  * Must be placed after all routes but before custom error handler
  */
 export function setupSentryErrorHandler(app: any): void {
+  /**
+   * Sets setup sentry error handler
+   *
+   * @param {any} app - The app
+   */
   /**
    * Sets setup sentry error handler
    *

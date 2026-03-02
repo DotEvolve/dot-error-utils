@@ -1,14 +1,14 @@
 /**
  * Standard error categories for consistent error classification across services
  */
-export const ErrorCategory = {
+export const ErrorCategory = Object.freeze({
   VALIDATION: "validation",
   AUTHENTICATION: "authentication",
   AUTHORIZATION: "authorization",
   CONFLICT: "conflict",
   NOT_FOUND: "not_found",
   SYSTEM: "system",
-} as const;
+} as const);
 
 export type ErrorCategoryType =
   (typeof ErrorCategory)[keyof typeof ErrorCategory];

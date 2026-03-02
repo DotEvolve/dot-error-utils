@@ -21,9 +21,18 @@ export function asyncHandler(
    *
    * @param {Function} fn - Function to fn
    */
+  /**
+   * Async Handler
+   *
+   * @param {Function} fn - Function to fn
+   */
   fn: (req: Request, res: Response, next: NextFunction) => Promise<any>,
 ) {
   return (req: Request, res: Response, next: NextFunction) => {
-    Promise.resolve(fn(req, res, next)).catch(next);
+    try {
+      return Promise.resolve(fn(req, res, next)).catch(next);
+    } catch (err) {
+      return next(err);
+    }
   };
 }

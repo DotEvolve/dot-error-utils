@@ -30,13 +30,20 @@ export function correlationIdMiddleware(
    * @param {Response} res - HTTP response object
    * @param {NextFunction} next - Next middleware function
    */
+  /**
+   * Correlation Id Middleware
+   *
+   * @param {Request} req - HTTP request object
+   * @param {Response} res - HTTP response object
+   * @param {NextFunction} next - Next middleware function
+   */
   req: Request,
   res: Response,
   next: NextFunction,
 ): void {
   // Generate new ID or use existing from header
   req.correlationId =
-    (req.headers["x-correlation-id"] as string) || randomUUID();
+    (req.headers?.["x-correlation-id"] as string) || randomUUID();
 
   // Set response header for client
   res.setHeader("X-Correlation-Id", req.correlationId);
