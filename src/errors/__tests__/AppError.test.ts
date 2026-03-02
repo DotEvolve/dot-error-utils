@@ -27,7 +27,7 @@ describe("AppError", () => {
     it("should create an error without details", () => {
       const error = new AppError("Test error", 500, ErrorCategory.SYSTEM);
 
-      expect(error.details).toBeNull();
+      expect(error.details).toBeUndefined();
     });
 
     it("should maintain proper stack trace", () => {
@@ -53,11 +53,11 @@ describe("AppError", () => {
       });
     });
 
-    it("should handle null details", () => {
+    it("should handle missing details", () => {
       const error = new AppError("Test error", 500, ErrorCategory.SYSTEM);
       const context = error.toSentryContext();
 
-      expect(context.details).toBeNull();
+      expect(context.details).toBeUndefined();
     });
   });
 });
