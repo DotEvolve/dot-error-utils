@@ -14,7 +14,7 @@ export class AppError extends Error {
     message: string,
     statusCode: number,
     category: ErrorCategoryType,
-    details: any = null,
+    details: any = undefined,
     correlationId?: string,
   ) {
     super(message);

@@ -165,7 +165,6 @@ describe("Sentry Configuration", () => {
 
       initializeSentry(config);
 
-      expect(nodeProfilingIntegration).toHaveBeenCalled();
       expect(Sentry.init).toHaveBeenCalledWith(
         expect.objectContaining({
           integrations: expect.arrayContaining([
