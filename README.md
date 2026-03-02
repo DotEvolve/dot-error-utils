@@ -1,5 +1,7 @@
 # @dotevolve/error-utils
 
+[![Socket Badge](https://badge.socket.dev/npm/package/@dotevolve/error-utils/1.0.2)](https://badge.socket.dev/npm/package/@dotevolve/error-utils/1.0.2)
+
 Shared error handling utilities with Sentry integration for dot-cOS microservices.
 
 ## Features
