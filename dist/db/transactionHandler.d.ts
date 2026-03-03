@@ -10,15 +10,20 @@
  * @returns Result from the transaction callback
  */
 export declare function withTransaction<T>(
-  /**
-   * Asynchronously with transaction
-   *
-   * @param {any} prisma - The prisma
-   * @param {Function} callback - Callback function
-   * @param {string} operationName="database_transaction" - The operation name
-   * @returns {Promise} The Promise
-   */
-  prisma: any,
-  callback: (tx: any) => Promise<T>,
-  operationName?: string,
-): Promise<T>;
+/**
+ * Asynchronously with transaction
+ *
+ * @param {any} prisma - The prisma
+ * @param {Function} callback - Callback function
+ * @param {string} operationName="database_transaction" - The operation name
+ * @returns {Promise} The Promise
+ */
+/**
+ * Asynchronously with transaction
+ *
+ * @param {any} prisma - The prisma
+ * @param {Function} callback - Callback function
+ * @param {string} operationName="database_transaction" - The operation name
+ * @returns {Promise} The Promise
+ */
+prisma: any, callback: (tx: any) => Promise<T>, operationName?: string): Promise<T>;

@@ -3,11 +3,11 @@ import { Request, Response, NextFunction } from "express";
  * Extend Express Request to include correlationId
  */
 declare global {
-  namespace Express {
-    interface Request {
-      correlationId?: string;
+    namespace Express {
+        interface Request {
+            correlationId?: string;
+        }
     }
-  }
 }
 /**
  * Middleware to generate or preserve correlation IDs for request tracing
@@ -20,14 +20,18 @@ declare global {
  * Must be registered after Sentry request handler
  */
 export declare function correlationIdMiddleware(
-  /**
-   * Correlation Id Middleware
-   *
-   * @param {Request} req - HTTP request object
-   * @param {Response} res - HTTP response object
-   * @param {NextFunction} next - Next middleware function
-   */
-  req: Request,
-  res: Response,
-  next: NextFunction,
-): void;
+/**
+ * Correlation Id Middleware
+ *
+ * @param {Request} req - HTTP request object
+ * @param {Response} res - HTTP response object
+ * @param {NextFunction} next - Next middleware function
+ */
+/**
+ * Correlation Id Middleware
+ *
+ * @param {Request} req - HTTP request object
+ * @param {Response} res - HTTP response object
+ * @param {NextFunction} next - Next middleware function
+ */
+req: Request, res: Response, next: NextFunction): void;

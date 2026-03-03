@@ -69,6 +69,8 @@ export function initializeSentry(config: SentryConfig): typeof Sentry {
     environment,
     serverName: serviceName,
     release,
+    debug: true, // Enable Sentry logs for debugging
+    enableLogs: true,
 
     // Performance monitoring
     tracesSampleRate,
