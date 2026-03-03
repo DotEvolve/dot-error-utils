@@ -17,13 +17,14 @@ exports.asyncHandler = asyncHandler;
  * }));
  */
 function asyncHandler(
-/**
- * Async Handler
- *
- * @param {Function} fn - Function to fn
- */
-fn) {
-    return (req, res, next) => {
-        Promise.resolve(fn(req, res, next)).catch(next);
-    };
+  /**
+   * Async Handler
+   *
+   * @param {Function} fn - Function to fn
+   */
+  fn,
+) {
+  return (req, res, next) => {
+    Promise.resolve(fn(req, res, next)).catch(next);
+  };
 }
