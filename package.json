@@ -1,6 +1,6 @@
 {
   "name": "@dotevolve/error-utils",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Shared error handling utilities with Sentry integration for Node.js and Express services",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -19,7 +19,7 @@
   "author": "DotEvolve",
   "license": "ISC",
   "peerDependencies": {
-    "express": "^4.0.0"
+    "express": "^4.0.0 || ^5.0.0"
   },
   "devDependencies": {
     "@types/express": "^4.17.21",
