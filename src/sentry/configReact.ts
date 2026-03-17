@@ -18,7 +18,9 @@ export interface ReactSentryConfig {
  * @param config - Sentry configuration options
  * @returns Configured React Sentry instance
  */
-export function initializeReactSentry(config: ReactSentryConfig): typeof Sentry {
+export function initializeReactSentry(
+  config: ReactSentryConfig,
+): typeof Sentry {
   const {
     dsn,
     environment = "development",
@@ -45,7 +47,7 @@ export function initializeReactSentry(config: ReactSentryConfig): typeof Sentry 
     tracesSampleRate,
     replaysSessionSampleRate,
     replaysOnErrorSampleRate,
-    
+
     // Data sanitization
     beforeSend(event: any, hint: any) {
       if (event.request?.data) {
