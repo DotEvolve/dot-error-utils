@@ -7,6 +7,10 @@
       "types": "./dist/node.d.ts",
       "default": "./dist/node.js"
     },
+    "./express": {
+      "types": "./dist/express.d.ts",
+      "default": "./dist/express.js"
+    },
     "./react": {
       "types": "./dist/react.d.ts",
       "default": "./dist/react.js"
