@@ -56,66 +56,49 @@ var __importStar =
     };
   })();
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.initializeSentry = initializeSentry;
-const Sentry = __importStar(require("@sentry/node"));
+exports.initializeReactSentry = initializeReactSentry;
+const Sentry = __importStar(require("@sentry/react"));
 const sanitizer_1 = require("../utils/sanitizer");
 /**
- * Initialize Sentry with service-specific configuration
+ * Initialize Sentry for React frontends with shared configuration
  *
  * @param config - Sentry configuration options
- * @returns Configured Sentry instance
+ * @returns Configured React Sentry instance
  */
-function initializeSentry(config) {
-  /**
-   * Initialize Sentry
-   *
-   * @param {SentryConfig} config - Configuration options
-   * @returns {any} The any
-   */
-  /**
-   * Initialize Sentry
-   *
-   * @param {SentryConfig} config - Configuration options
-   * @returns {any} The any
-   */
+function initializeReactSentry(config) {
   const {
     dsn,
-    environment = process.env.NODE_ENV || "development",
-    serviceName,
+    environment = "development",
     release,
-    tracesSampleRate = environment === "production" ? 0.1 : 1.0,
-    profilesSampleRate = environment === "production" ? 0.1 : 1.0,
+    tracesSampleRate = environment === "production" ? 1.0 : 1.0,
+    replaysSessionSampleRate = environment === "production" ? 0.1 : 0,
+    replaysOnErrorSampleRate = environment === "production" ? 1.0 : 1.0,
     sensitiveFields = [],
+    debug = false,
   } = config;
-  let profilingIntegration = null;
-  try {
-    profilingIntegration =
-      require("@sentry/profiling-node").nodeProfilingIntegration;
-  } catch {
-    // Profiling not available (native bindings missing) — disabled gracefully
-  }
   Sentry.init({
     dsn,
     environment,
-    serverName: serviceName,
     release,
-    debug: true, // Enable Sentry logs for debugging
-    enableLogs: true,
-    // Performance monitoring
+    debug,
+    integrations: [
+      Sentry.browserTracingIntegration(),
+      Sentry.replayIntegration({
+        maskAllText: false,
+        blockAllMedia: false,
+      }),
+    ],
     tracesSampleRate,
-    profilesSampleRate,
-    // Integrations
-    integrations: [...(profilingIntegration ? [profilingIntegration()] : [])],
+    replaysSessionSampleRate,
+    replaysOnErrorSampleRate,
     // Data sanitization
     beforeSend(event, hint) {
-      // Sanitize request data
       if (event.request?.data) {
         event.request.data = (0, sanitizer_1.sanitizeData)(
           event.request.data,
           sensitiveFields,
         );
       }
-      // Sanitize extra context
       if (event.extra) {
         event.extra = (0, sanitizer_1.sanitizeData)(
           event.extra,
@@ -124,12 +107,10 @@ function initializeSentry(config) {
       }
       return event;
     },
-    // Breadcrumb filtering and sanitization
     beforeBreadcrumb(breadcrumb, hint) {
       if (breadcrumb.category === "http" && breadcrumb.data?.url) {
         breadcrumb.data.url = (0, sanitizer_1.sanitizeUrl)(breadcrumb.data.url);
       }
-      // Sanitize breadcrumb data
       if (breadcrumb.data) {
         breadcrumb.data = (0, sanitizer_1.sanitizeData)(
           breadcrumb.data,
@@ -138,13 +119,6 @@ function initializeSentry(config) {
       }
       return breadcrumb;
     },
-    // Error filtering
-    ignoreErrors: [
-      // Ignore known non-critical errors
-      "ECONNRESET",
-      "EPIPE",
-      "ECONNREFUSED",
-    ],
   });
   return Sentry;
 }

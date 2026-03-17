@@ -46,7 +46,11 @@ export class AppError extends Error {
  * Validation error (400)
  */
 export class ValidationError extends AppError {
-  constructor(message: string, details?: Record<string, string[]>, correlationId?: string) {
+  constructor(
+    message: string,
+    details?: Record<string, string[]>,
+    correlationId?: string,
+  ) {
     super(message, 400, ErrorCategory.VALIDATION, details, correlationId);
   }
 }
@@ -55,7 +59,10 @@ export class ValidationError extends AppError {
  * Authentication error (401)
  */
 export class AuthenticationError extends AppError {
-  constructor(message: string = "Authentication required", correlationId?: string) {
+  constructor(
+    message: string = "Authentication required",
+    correlationId?: string,
+  ) {
     super(message, 401, ErrorCategory.AUTHENTICATION, undefined, correlationId);
   }
 }
@@ -64,7 +71,10 @@ export class AuthenticationError extends AppError {
  * Authorization error (403)
  */
 export class AuthorizationError extends AppError {
-  constructor(message: string = "Insufficient permissions", correlationId?: string) {
+  constructor(
+    message: string = "Insufficient permissions",
+    correlationId?: string,
+  ) {
     super(message, 403, ErrorCategory.AUTHORIZATION, undefined, correlationId);
   }
 }

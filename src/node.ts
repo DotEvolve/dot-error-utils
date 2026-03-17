@@ -1,3 +1,4 @@
+// Error classes
 export {
   AppError,
   ValidationError,
@@ -6,8 +7,11 @@ export {
   NotFoundError,
   ConflictError,
 } from "./errors/AppError";
+
 export { ErrorCategory } from "./errors/ErrorCategory";
 export type { ErrorCategoryType } from "./errors/ErrorCategory";
+
+// Middleware
 export { correlationIdMiddleware } from "./middleware/correlationId";
 export {
   errorHandlerMiddleware,
@@ -18,8 +22,14 @@ export {
   setupSentryMiddleware,
   attachSentryContext,
 } from "./middleware/sentryMiddleware";
+
+// Sentry configuration
 export { initializeSentry } from "./sentry/config";
 export type { SentryConfig } from "./sentry/config";
+
+// Database utilities
 export { withTransaction } from "./db/transactionHandler";
+
+// Utilities
 export { asyncHandler } from "./utils/asyncHandler";
 export { sanitizeData, sanitizeUrl } from "./utils/sanitizer";

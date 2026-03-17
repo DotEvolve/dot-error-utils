@@ -252,16 +252,20 @@ SENSITIVE_FIELDS=customField1,customField2
 This package uses GitHub Actions for CI (testing) and CD (publishing).
 
 ### Branching Strategy
+
 - `master`: Production-ready branch. Pushes to this branch trigger an NPM publish.
 - `dev`: Development branch. All feature work should be merged here first.
 - **Pull Requests**: Pull requests should be raised from feature branches to `dev` or from `dev` to `master`.
 
 ### Workflows
+
 1. **CI** ([ci.yml](.github/workflows/ci.yml)): Runs on pushes to `dev` and pull requests to `master`. It performs `npm test` and `npm build`.
 2. **Publish** ([publish.yml](.github/workflows/publish.yml)): Runs only on pushes to `master`. It performs `npm test`, `npm build`, and `npm publish`.
 
 ### Configuration
+
 To enable automated publishing, you must configure a GitHub Environment:
+
 1. Go to your repository on GitHub.
 2. Navigate to **Settings** -> **Environments**.
 3. Click **New environment** and name it `production`.

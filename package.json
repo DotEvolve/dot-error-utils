@@ -1,9 +1,21 @@
 {
   "name": "@dotevolve/error-utils",
-  "version": "1.0.2",
+  "version": "1.0.6",
   "description": "Shared error handling utilities with Sentry integration for Node.js and Express services",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "exports": {
+    "./node": {
+      "types": "./dist/node.d.ts",
+      "default": "./dist/node.js"
+    },
+    "./express": {
+      "types": "./dist/express.d.ts",
+      "default": "./dist/express.js"
+    },
+    "./react": {
+      "types": "./dist/react.d.ts",
+      "default": "./dist/react.js"
+    }
+  },
   "scripts": {
     "build": "tsc",
     "test": "vitest",
@@ -19,12 +31,18 @@
   "author": "DotEvolve",
   "license": "ISC",
   "peerDependencies": {
-    "express": "^4.0.0"
+    "express": "^4.0.0 || ^5.0.0",
+    "react": ">=16.14.0",
+    "react-dom": ">=16.14.0"
   },
   "devDependencies": {
     "@types/express": "^4.17.21",
     "@types/node": "^20.0.0",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
     "express": "^4.22.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
     "typescript": "^5.3.0",
     "vitest": "^1.0.0"
   },
@@ -33,7 +51,9 @@
     "README.md"
   ],
   "dependencies": {
+    "@dotevolve/error-utils": "file:",
     "@sentry/node": "^10.40.0",
-    "@sentry/profiling-node": "^10.40.0"
+    "@sentry/profiling-node": "^10.40.0",
+    "@sentry/react": "^10.44.0"
   }
 }

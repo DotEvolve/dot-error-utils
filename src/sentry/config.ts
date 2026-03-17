@@ -1,7 +1,6 @@
 import * as Sentry from "@sentry/node";
 import { sanitizeData, sanitizeUrl } from "../utils/sanitizer";
 
-
 declare global {
   namespace Express {
     interface Request {
@@ -59,7 +58,8 @@ export function initializeSentry(config: SentryConfig): typeof Sentry {
 
   let profilingIntegration: any = null;
   try {
-    profilingIntegration = require("@sentry/profiling-node").nodeProfilingIntegration;
+    profilingIntegration =
+      require("@sentry/profiling-node").nodeProfilingIntegration;
   } catch {
     // Profiling not available (native bindings missing) — disabled gracefully
   }
@@ -69,15 +69,15 @@ export function initializeSentry(config: SentryConfig): typeof Sentry {
     environment,
     serverName: serviceName,
     release,
+    debug: true, // Enable Sentry logs for debugging
+    enableLogs: true,
 
     // Performance monitoring
     tracesSampleRate,
     profilesSampleRate,
 
     // Integrations
-    integrations: [
-      ...(profilingIntegration ? [profilingIntegration()] : []),
-    ],
+    integrations: [...(profilingIntegration ? [profilingIntegration()] : [])],
 
     // Data sanitization
     beforeSend(event: any, hint: any) {
