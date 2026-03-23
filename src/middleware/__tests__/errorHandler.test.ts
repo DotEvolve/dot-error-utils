@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { Request, Response, NextFunction } from "express";
 import * as Sentry from "@sentry/node";
+import * as fc from "fast-check";
 import {
   errorHandlerMiddleware,
   setupSentryErrorHandler,
@@ -8,6 +9,9 @@ import {
 import {
   AppError,
   ValidationError,
+  AuthenticationError,
+  AuthorizationError,
+  ConflictError,
   NotFoundError,
 } from "../../errors/AppError";
 import { ErrorCategory } from "../../errors/ErrorCategory";
@@ -488,6 +492,150 @@ describe("errorHandlerMiddleware", () => {
         }),
       );
     });
+
+    it("should not include details field on non-validation errors", () => {
+      const error = new AuthenticationError("Unauthorized");
+
+      errorHandlerMiddleware(
+        error,
+        mockRequest as Request,
+        mockResponse as Response,
+        mockNext,
+      );
+
+      const response = jsonSpy.mock.calls[0][0];
+      expect(response.error.details).toBeUndefined();
+    });
+  });
+
+  describe("success: false for all six error categories", () => {
+    it("should return success: false for validation errors (400)", () => {
+      errorHandlerMiddleware(
+        new ValidationError("Invalid input"),
+        mockRequest as Request,
+        mockResponse as Response,
+        mockNext,
+      );
+      expect(jsonSpy.mock.calls[0][0].success).toBe(false);
+    });
+
+    it("should return success: false for authentication errors (401)", () => {
+      errorHandlerMiddleware(
+        new AuthenticationError("Unauthorized"),
+        mockRequest as Request,
+        mockResponse as Response,
+        mockNext,
+      );
+      expect(jsonSpy.mock.calls[0][0].success).toBe(false);
+    });
+
+    it("should return success: false for authorization errors (403)", () => {
+      errorHandlerMiddleware(
+        new AuthorizationError("Forbidden"),
+        mockRequest as Request,
+        mockResponse as Response,
+        mockNext,
+      );
+      expect(jsonSpy.mock.calls[0][0].success).toBe(false);
+    });
+
+    it("should return success: false for conflict errors (409)", () => {
+      errorHandlerMiddleware(
+        new ConflictError("Duplicate entry"),
+        mockRequest as Request,
+        mockResponse as Response,
+        mockNext,
+      );
+      expect(jsonSpy.mock.calls[0][0].success).toBe(false);
+    });
+
+    it("should return success: false for not_found errors (404)", () => {
+      errorHandlerMiddleware(
+        new NotFoundError("Resource"),
+        mockRequest as Request,
+        mockResponse as Response,
+        mockNext,
+      );
+      expect(jsonSpy.mock.calls[0][0].success).toBe(false);
+    });
+
+    it("should return success: false for system errors (500)", () => {
+      errorHandlerMiddleware(
+        new Error("Internal error"),
+        mockRequest as Request,
+        mockResponse as Response,
+        mockNext,
+      );
+      expect(jsonSpy.mock.calls[0][0].success).toBe(false);
+    });
+  });
+
+  describe("status codes for all six error categories", () => {
+    it("should return 401 for AuthenticationError", () => {
+      errorHandlerMiddleware(
+        new AuthenticationError(),
+        mockRequest as Request,
+        mockResponse as Response,
+        mockNext,
+      );
+      expect(statusSpy).toHaveBeenCalledWith(401);
+    });
+
+    it("should return 403 for AuthorizationError", () => {
+      errorHandlerMiddleware(
+        new AuthorizationError(),
+        mockRequest as Request,
+        mockResponse as Response,
+        mockNext,
+      );
+      expect(statusSpy).toHaveBeenCalledWith(403);
+    });
+
+    it("should return 409 for ConflictError", () => {
+      errorHandlerMiddleware(
+        new ConflictError("Duplicate"),
+        mockRequest as Request,
+        mockResponse as Response,
+        mockNext,
+      );
+      expect(statusSpy).toHaveBeenCalledWith(409);
+    });
+  });
+
+  describe("unrecognised errors do not leak stack traces", () => {
+    it("should not expose stack trace for plain Error in non-development environments", () => {
+      const originalEnv = process.env.NODE_ENV;
+      process.env.NODE_ENV = "production";
+
+      errorHandlerMiddleware(
+        new Error("Something went wrong"),
+        mockRequest as Request,
+        mockResponse as Response,
+        mockNext,
+      );
+
+      const response = jsonSpy.mock.calls[0][0];
+      expect(response.error.stack).toBeUndefined();
+
+      process.env.NODE_ENV = originalEnv;
+    });
+
+    it("should not expose stack trace for plain Error in test environment", () => {
+      const originalEnv = process.env.NODE_ENV;
+      process.env.NODE_ENV = "test";
+
+      errorHandlerMiddleware(
+        new Error("Something went wrong"),
+        mockRequest as Request,
+        mockResponse as Response,
+        mockNext,
+      );
+
+      const response = jsonSpy.mock.calls[0][0];
+      expect(response.error.stack).toBeUndefined();
+
+      process.env.NODE_ENV = originalEnv;
+    });
   });
 
   describe("status codes", () => {
@@ -538,5 +686,191 @@ describe("setupSentryErrorHandler", () => {
     setupSentryErrorHandler(mockApp);
 
     expect(mockApp.use).toHaveBeenCalledWith(errorHandlerMiddleware);
+  });
+});
+
+// Feature: platform-improvements, Property 3: Error handler response shape
+describe("Property 3: Error handler response shape", () => {
+  // Validates: Requirements 1.3, 1.4
+
+  const STATUS_MAP: Record<string, number> = {
+    validation: 400,
+    authentication: 401,
+    authorization: 403,
+    conflict: 409,
+    not_found: 404,
+    system: 500,
+  };
+
+  function makeError(category: string): AppError {
+    switch (category) {
+      case "validation":
+        return new ValidationError("Invalid input", { field: ["required"] });
+      case "authentication":
+        return new AuthenticationError("Unauthorized");
+      case "authorization":
+        return new AuthorizationError("Forbidden");
+      case "conflict":
+        return new ConflictError("Conflict occurred");
+      case "not_found":
+        return new NotFoundError("Resource");
+      case "system":
+      default:
+        return new AppError("System error", 500, "system");
+    }
+  }
+
+  it("for any AppError category, response has success:false, correct status code, and details only for validation", () => {
+    fc.assert(
+      fc.property(
+        fc.constantFrom(
+          "validation",
+          "authentication",
+          "authorization",
+          "conflict",
+          "not_found",
+          "system",
+        ),
+        (category) => {
+          const statusSpy = vi.fn().mockReturnThis();
+          const jsonSpy = vi.fn();
+
+          const req = {
+            correlationId: "test-id",
+            path: "/test",
+            method: "GET",
+            query: {},
+            body: {},
+          } as unknown as Request;
+
+          const res = {
+            status: statusSpy,
+            json: jsonSpy,
+          } as unknown as Response;
+
+          const next = vi.fn() as unknown as NextFunction;
+
+          vi.clearAllMocks();
+
+          const error = makeError(category);
+          errorHandlerMiddleware(error, req, res, next);
+
+          const response = jsonSpy.mock.calls[0][0];
+
+          // success must be false
+          expect(response.success).toBe(false);
+
+          // status code must match the category
+          expect(statusSpy).toHaveBeenCalledWith(STATUS_MAP[category]);
+
+          // details must be present only for validation
+          if (category === "validation") {
+            expect(response.error.details).toBeDefined();
+          } else {
+            expect(response.error.details).toBeUndefined();
+          }
+        },
+      ),
+      { numRuns: 100 },
+    );
+  });
+});
+
+// Feature: platform-improvements, Property 4: Unrecognised errors do not leak stack traces
+describe("Property 4: Unrecognised errors do not leak stack traces", () => {
+  // Validates: Requirements 1.5
+
+  it("for any plain Error, response has status 500 and no stack field in non-development environments", () => {
+    const originalEnv = process.env.NODE_ENV;
+
+    fc.assert(
+      fc.property(fc.string(), (message) => {
+        process.env.NODE_ENV = "production";
+
+        const statusSpy = vi.fn().mockReturnThis();
+        const jsonSpy = vi.fn();
+
+        const req = {
+          correlationId: "test-id",
+          path: "/test",
+          method: "GET",
+          query: {},
+          body: {},
+        } as unknown as Request;
+
+        const res = {
+          status: statusSpy,
+          json: jsonSpy,
+        } as unknown as Response;
+
+        const next = vi.fn() as unknown as NextFunction;
+
+        vi.clearAllMocks();
+
+        const error = new Error(message);
+        errorHandlerMiddleware(error, req, res, next);
+
+        const response = jsonSpy.mock.calls[0][0];
+
+        // status must be 500
+        expect(statusSpy).toHaveBeenCalledWith(500);
+
+        // stack must not be present in non-development environments
+        expect(response.error.stack).toBeUndefined();
+
+        process.env.NODE_ENV = originalEnv;
+      }),
+      { numRuns: 100 },
+    );
+  });
+});
+
+// Feature: platform-improvements, Property 14: Logger emits system error entry with correlationId
+describe("Property 14: Logger emits system error entry with correlationId", () => {
+  // Validates: Requirements 4.6
+  it("for any system-category error, response has success:false and status 500", () => {
+    fc.assert(
+      fc.property(
+        fc.string({ minLength: 1, maxLength: 200 }),
+        fc.string({ minLength: 1, maxLength: 50 }),
+        (message, correlationId) => {
+          const statusSpy = vi.fn().mockReturnThis();
+          const jsonSpy = vi.fn();
+
+          const req = {
+            correlationId,
+            path: "/test",
+            method: "GET",
+            query: {},
+            body: {},
+          } as unknown as Request;
+
+          const res = {
+            status: statusSpy,
+            json: jsonSpy,
+          } as unknown as Response;
+
+          const next = vi.fn() as unknown as NextFunction;
+
+          vi.clearAllMocks();
+
+          // Plain Error always maps to system category
+          const error = new Error(message);
+          errorHandlerMiddleware(error, req, res, next);
+
+          const response = jsonSpy.mock.calls[0][0];
+
+          // Must be a failure response
+          expect(response.success).toBe(false);
+          // Must be 500
+          expect(statusSpy).toHaveBeenCalledWith(500);
+          // correlationId must be echoed back
+          expect(response.error.correlationId).toBe(correlationId);
+          // error message must be present
+          expect(response.error.message).toBe(message);
+        },
+      ),
+      { numRuns: 100 },
+    );
   });
 });

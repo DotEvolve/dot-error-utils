@@ -21,12 +21,12 @@ npm install @dotevolve/error-utils @sentry/node @sentry/profiling-node
 
 As of **v1.0.7**, the package is split into three environment-specific entry points to keep bundles lean and prevent peer dependency conflicts:
 
-| Import path | Use case |
-|---|---|
-| `@dotevolve/error-utils/node` | Node.js services — `initializeSentry`, `withTransaction`, error classes |
+| Import path                      | Use case                                                                                                                        |
+| -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| `@dotevolve/error-utils/node`    | Node.js services — `initializeSentry`, `withTransaction`, error classes                                                         |
 | `@dotevolve/error-utils/express` | Express apps — all of the above + `setupSentryMiddleware`, `correlationIdMiddleware`, `setupSentryErrorHandler`, `asyncHandler` |
-| `@dotevolve/error-utils/react` | React apps — `initializeReactSentry`, error classes |
-| `@dotevolve/error-utils` | Root — all exports (convenience, same as `/express`) |
+| `@dotevolve/error-utils/react`   | React apps — `initializeReactSentry`, error classes                                                                             |
+| `@dotevolve/error-utils`         | Root — all exports (convenience, same as `/express`)                                                                            |
 
 ## Quick Start
 

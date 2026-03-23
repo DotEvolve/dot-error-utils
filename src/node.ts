@@ -30,6 +30,9 @@ export type { SentryConfig } from "./sentry/config";
 // Database utilities
 export { withTransaction } from "./db/transactionHandler";
 
+// Logger
+export { createLogger, getLogger } from "./logger";
+
 // Utilities
 export { asyncHandler } from "./utils/asyncHandler";
 export { sanitizeData, sanitizeUrl } from "./utils/sanitizer";
