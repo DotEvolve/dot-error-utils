@@ -41,7 +41,7 @@
     "@types/pino": "^7.0.4",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
-    "express": "^4.22.1",
+    "express": "^5.0.0",
     "fast-check": "^4.6.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
@@ -53,7 +53,6 @@
     "README.md"
   ],
   "dependencies": {
-    "@dotevolve/error-utils": "file:",
     "@sentry/node": "^10.40.0",
     "@sentry/profiling-node": "^10.40.0",
     "@sentry/react": "^10.44.0",

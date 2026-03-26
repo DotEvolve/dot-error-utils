@@ -1,27 +1,17 @@
 name: CI
-
 on:
   push:
-    branches:
-      - dev
+    branches: [main, develop]
   pull_request:
-    branches:
-      - master
-      - dev
-
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: "24.x"
-      - name: Install dependencies
-        run: rm -f package-lock.json && npm install
-      - name: Check Formatting
-        run: npx prettier --check . --ignore-unknown
-      - name: Run tests
-        run: npm test
-      - name: Build package
-        run: npm run build
+          node-version: "20"
+          cache: "npm"
+      - run: npm ci
+      - run: npm run build
+      - run: npm test

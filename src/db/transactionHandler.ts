@@ -17,6 +17,9 @@ import { getLogger } from "../logger";
  * @param operationName - Label used for the Sentry span and log entries (default: `"database_transaction"`)
  * @returns A promise that resolves with the value returned by `callback`
  * @throws Re-throws any error thrown by `callback` or by Prisma
+ * @prismaOnly This utility calls `prisma.$transaction` internally and is NOT
+ * compatible with Mongoose. For Mongoose-based services, implement a local
+ * `withMongooseTransaction` using `mongoose.startSession()` instead.
  *
  * @example
  * ```ts
