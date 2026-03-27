@@ -58,26 +58,37 @@ var __importStar =
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.withTransaction = withTransaction;
 const Sentry = __importStar(require("@sentry/node"));
+const logger_1 = require("../logger");
 /**
- * Prisma transaction wrapper with Sentry performance monitoring
+ * Execute a Prisma database transaction with Sentry performance monitoring and
+ * structured logging.
  *
- * Automatically tracks transaction duration and captures failures to Sentry
- * Prisma handles rollback automatically on errors
+ * Wraps the callback in a Sentry span named `operationName`, logs the start,
+ * completion (with duration), and any failure. On error, adds a Sentry
+ * breadcrumb and captures the exception before re-throwing.
  *
- * @param prisma - Prisma client instance
- * @param callback - Transaction callback function
- * @param operationName - Name for Sentry transaction tracking
- * @returns Result from the transaction callback
+ * Prisma handles rollback automatically when the callback throws.
+ *
+ * @typeParam T - The return type of the transaction callback
+ * @param prisma - Prisma client instance (must expose `$transaction`)
+ * @param callback - Async function that receives the Prisma transaction client
+ * @param operationName - Label used for the Sentry span and log entries (default: `"database_transaction"`)
+ * @returns A promise that resolves with the value returned by `callback`
+ * @throws Re-throws any error thrown by `callback` or by Prisma
+ * @prismaOnly This utility calls `prisma.$transaction` internally and is NOT
+ * compatible with Mongoose. For Mongoose-based services, implement a local
+ * `withMongooseTransaction` using `mongoose.startSession()` instead.
+ *
+ * @example
+ * ```ts
+ * import { withTransaction } from '@dotevolve/error-utils/node';
+ *
+ * const user = await withTransaction(prisma, async (tx) => {
+ *   return tx.user.create({ data: { email: 'a@example.com' } });
+ * }, 'create-user');
+ * ```
  */
 async function withTransaction(
-  /**
-   * Asynchronously with transaction
-   *
-   * @param {any} prisma - The prisma
-   * @param {Function} callback - Callback function
-   * @param {string} operationName="database_transaction" - The operation name
-   * @returns {Promise} The Promise
-   */
   /**
    * Asynchronously with transaction
    *
@@ -93,13 +104,26 @@ async function withTransaction(
   return await Sentry.startSpan(
     { name: operationName, op: "db.transaction" },
     async () => {
+      const startMs = Date.now();
+      (0, logger_1.getLogger)().info({ operationName }, "transaction started");
       try {
         // Execute Prisma transaction
         const result = await prisma.$transaction(async (tx) => {
           return await callback(tx);
         });
+        (0, logger_1.getLogger)().info(
+          { operationName, durationMs: Date.now() - startMs },
+          "transaction completed",
+        );
         return result;
       } catch (error) {
+        (0, logger_1.getLogger)().error(
+          {
+            operationName,
+            err: error instanceof Error ? error.message : String(error),
+          },
+          "transaction failed",
+        );
         // Add breadcrumb for rollback
         Sentry.addBreadcrumb({
           category: "transaction",

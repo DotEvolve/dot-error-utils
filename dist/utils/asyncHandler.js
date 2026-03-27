@@ -27,6 +27,11 @@ function asyncHandler(
    *
    * @param {Function} fn - Function to fn
    */
+  /**
+   * Async Handler
+   *
+   * @param {Function} fn - Function to fn
+   */
   fn,
 ) {
   return (req, res, next) => {

@@ -1,5 +1,6 @@
 import * as Sentry from "@sentry/node";
 import { sanitizeData, sanitizeUrl } from "../utils/sanitizer";
+import { createLogger } from "../logger";
 
 declare global {
   namespace Express {
@@ -28,12 +29,45 @@ export interface SentryConfig {
 }
 
 /**
- * Initialize Sentry with service-specific configuration
+ * Initialize Sentry for a Node.js / Express service.
+ *
+ * Configures the Sentry SDK with the provided options, applies sensible
+ * defaults for `tracesSampleRate` and `profilesSampleRate` based on the
+ * environment, sanitizes outgoing event data, and initialises the structured
+ * logger singleton for the service.
+ *
+ * Call this once at application startup, before any routes are registered.
  *
  * @param config - Sentry configuration options
- * @returns Configured Sentry instance
+ * @param config.dsn - Sentry DSN for the project
+ * @param config.serviceName - Identifies the service in Sentry and log output
+ * @param config.environment - Deployment environment (defaults to `NODE_ENV`)
+ * @param config.release - Release identifier (e.g. git SHA)
+ * @param config.tracesSampleRate - Fraction of transactions to sample (0–1)
+ * @param config.profilesSampleRate - Fraction of profiles to sample (0–1)
+ * @param config.sensitiveFields - Additional field names to redact from events
+ * @returns The configured `@sentry/node` module
+ *
+ * @throws Does not throw; Sentry SDK errors are swallowed internally
+ *
+ * @example
+ * ```ts
+ * import { initializeSentry } from '@dotevolve/error-utils/node';
+ *
+ * initializeSentry({
+ *   dsn: process.env.SENTRY_DSN!,
+ *   serviceName: 'my-api',
+ *   environment: process.env.NODE_ENV,
+ * });
+ * ```
  */
 export function initializeSentry(config: SentryConfig): typeof Sentry {
+  /**
+   * Initialize Sentry
+   *
+   * @param {SentryConfig} config - Configuration options
+   * @returns {any} The any
+   */
   /**
    * Initialize Sentry
    *
@@ -116,6 +150,9 @@ export function initializeSentry(config: SentryConfig): typeof Sentry {
       "ECONNREFUSED",
     ],
   });
+
+  // Initialise the logger singleton for this service
+  createLogger(serviceName);
 
   return Sentry;
 }

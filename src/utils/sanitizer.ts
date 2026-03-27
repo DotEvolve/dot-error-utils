@@ -36,6 +36,13 @@ export function sanitizeData(data: any, sensitiveFields: string[] = []): any {
    * @param {string[]} sensitiveFields=[] - Array of sensitive fields
    * @returns {any} The any
    */
+  /**
+   * Sanitize Data
+   *
+   * @param {any} data - The data to process
+   * @param {string[]} sensitiveFields=[] - Array of sensitive fields
+   * @returns {any} The any
+   */
   if (!data || typeof data !== "object") {
     return data;
   }
@@ -64,6 +71,12 @@ export function sanitizeData(data: any, sensitiveFields: string[] = []): any {
  * Sanitize URL by removing sensitive query parameters
  */
 export function sanitizeUrl(url: string): string {
+  /**
+   * Sanitize Url
+   *
+   * @param {string} url - The url
+   * @returns {string} String result
+   */
   /**
    * Sanitize Url
    *

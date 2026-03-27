@@ -125,6 +125,26 @@ describe("setupSentryMiddleware", () => {
 
     expect(next).toHaveBeenCalledTimes(1);
   });
+
+  it("should complete setup without throwing when Sentry is not initialised", () => {
+    // Sentry.getActiveSpan returns undefined when Sentry has not been initialised
+    vi.mocked(Sentry.getActiveSpan).mockReturnValue(undefined);
+
+    // setupSentryMiddleware itself must not throw
+    expect(() => setupSentryMiddleware(mockApp)).not.toThrow();
+
+    // The registered middleware must also not throw when invoked
+    const middleware = mockApp.use.mock.calls[0][0];
+    const req = {} as Request;
+    const res = { setHeader: vi.fn() } as unknown as Response;
+    const next = vi.fn();
+
+    expect(() => middleware(req, res, next)).not.toThrow();
+    expect(next).toHaveBeenCalledTimes(1);
+    // Falls back to a generated ID rather than a Sentry trace ID
+    expect(req.correlationId).toBeDefined();
+    expect(req.correlationId).toMatch(/^fallback-/);
+  });
 });
 
 describe("attachSentryContext", () => {

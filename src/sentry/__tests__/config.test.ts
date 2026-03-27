@@ -374,3 +374,137 @@ describe("Sentry Configuration", () => {
     });
   });
 });
+
+// Tests for initializeReactSentry (configReact.ts)
+// Requirements: 3.3
+
+vi.mock("@sentry/react", () => ({
+  init: vi.fn(),
+  browserTracingIntegration: vi.fn(() => ({ name: "BrowserTracing" })),
+  browserProfilingIntegration: vi.fn(() => ({ name: "BrowserProfiling" })),
+  consoleLoggingIntegration: vi.fn(() => ({ name: "ConsoleLogging" })),
+  replayIntegration: vi.fn(() => ({ name: "Replay" })),
+}));
+
+import * as SentryReact from "@sentry/react";
+import { initializeReactSentry, ReactSentryConfig } from "../configReact";
+
+describe("initializeReactSentry", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it("should call React Sentry init with provided dsn and environment", () => {
+    const config: ReactSentryConfig = {
+      dsn: "https://react-test@sentry.io/456",
+      environment: "production",
+    };
+
+    initializeReactSentry(config);
+
+    expect(SentryReact.init).toHaveBeenCalledWith(
+      expect.objectContaining({
+        dsn: "https://react-test@sentry.io/456",
+        environment: "production",
+      }),
+    );
+  });
+
+  it("should default environment to development when not provided", () => {
+    const config: ReactSentryConfig = {
+      dsn: "https://react-test@sentry.io/456",
+    };
+
+    initializeReactSentry(config);
+
+    expect(SentryReact.init).toHaveBeenCalledWith(
+      expect.objectContaining({
+        dsn: "https://react-test@sentry.io/456",
+        environment: "development",
+      }),
+    );
+  });
+
+  it("should return the Sentry React instance", () => {
+    const config: ReactSentryConfig = {
+      dsn: "https://react-test@sentry.io/456",
+    };
+
+    const result = initializeReactSentry(config);
+
+    expect(result).toBe(SentryReact);
+  });
+
+  it("should pass release when provided", () => {
+    const config: ReactSentryConfig = {
+      dsn: "https://react-test@sentry.io/456",
+      release: "v2.0.0",
+    };
+
+    initializeReactSentry(config);
+
+    expect(SentryReact.init).toHaveBeenCalledWith(
+      expect.objectContaining({
+        release: "v2.0.0",
+      }),
+    );
+  });
+});
+
+// Feature: platform-improvements, Property 9: initializeSentry passes config to Sentry.init
+// Validates: Requirements 3.1
+import * as fc from "fast-check";
+
+describe("Property 9: initializeSentry passes config to Sentry.init", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it("for any dsn and serviceName, Sentry.init is called with those exact values", () => {
+    fc.assert(
+      fc.property(fc.string(), fc.string(), (dsn, serviceName) => {
+        vi.clearAllMocks();
+
+        initializeSentry({ dsn, serviceName });
+
+        expect(Sentry.init).toHaveBeenCalledWith(
+          expect.objectContaining({
+            dsn,
+            serverName: serviceName,
+          }),
+        );
+      }),
+      { numRuns: 100 },
+    );
+  });
+});
+
+// Feature: platform-improvements, Property 10: initializeReactSentry passes config to Sentry.init
+// Validates: Requirements 3.3
+describe("Property 10: initializeReactSentry passes config to Sentry.init", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it("for any dsn and environment, SentryReact.init is called with those exact values", () => {
+    fc.assert(
+      fc.property(
+        fc.string(),
+        fc.constantFrom("development", "production", "staging", "test"),
+        (dsn, environment) => {
+          vi.clearAllMocks();
+
+          initializeReactSentry({ dsn, environment });
+
+          expect(SentryReact.init).toHaveBeenCalledWith(
+            expect.objectContaining({
+              dsn,
+              environment,
+            }),
+          );
+        },
+      ),
+      { numRuns: 100 },
+    );
+  });
+});

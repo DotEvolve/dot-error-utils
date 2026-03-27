@@ -25,5 +25,10 @@ export declare function asyncHandler(
    *
    * @param {Function} fn - Function to fn
    */
+  /**
+   * Async Handler
+   *
+   * @param {Function} fn - Function to fn
+   */
   fn: (req: Request, res: Response, next: NextFunction) => Promise<any>,
 ): (req: Request, res: Response, next: NextFunction) => void | Promise<any>;

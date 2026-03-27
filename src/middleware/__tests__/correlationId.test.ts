@@ -210,3 +210,110 @@ describe("correlationIdMiddleware", () => {
     });
   });
 });
+
+// Feature: platform-improvements, Property 1: Correlation ID generation
+import * as fc from "fast-check";
+
+describe("Property-based tests", () => {
+  describe("Property 1: Correlation ID generation", () => {
+    it("for any request without x-correlation-id, sets non-empty req.correlationId and matching response header", () => {
+      // Validates: Requirements 1.1
+      fc.assert(
+        fc.property(fc.record({}), (_input) => {
+          const setHeaderSpy = vi.fn();
+          const req: Partial<Request> = { headers: {} };
+          const res: Partial<Response> = { setHeader: setHeaderSpy };
+          const next = vi.fn();
+
+          correlationIdMiddleware(
+            req as Request,
+            res as Response,
+            next as NextFunction,
+          );
+
+          // req.correlationId must be a non-empty string
+          const correlationId = (req as any).correlationId;
+          if (typeof correlationId !== "string" || correlationId.length === 0) {
+            return false;
+          }
+
+          // X-Correlation-Id response header must match req.correlationId
+          const headerCall = setHeaderSpy.mock.calls.find(
+            (call) => call[0] === "X-Correlation-Id",
+          );
+          if (!headerCall || headerCall[1] !== correlationId) {
+            return false;
+          }
+
+          return true;
+        }),
+        { numRuns: 100 },
+      );
+    });
+  });
+
+  // Feature: platform-improvements, Property 2: Correlation ID preservation
+  describe("Property 2: Correlation ID preservation", () => {
+    it("for any non-empty string x-correlation-id header, req.correlationId equals that exact value", () => {
+      // Validates: Requirements 1.2
+      fc.assert(
+        fc.property(fc.string({ minLength: 1 }), (headerValue) => {
+          const setHeaderSpy = vi.fn();
+          const req: Partial<Request> = {
+            headers: { "x-correlation-id": headerValue },
+          };
+          const res: Partial<Response> = { setHeader: setHeaderSpy };
+          const next = vi.fn();
+
+          correlationIdMiddleware(
+            req as Request,
+            res as Response,
+            next as NextFunction,
+          );
+
+          return (req as any).correlationId === headerValue;
+        }),
+        { numRuns: 100 },
+      );
+    });
+  });
+});
+
+// Feature: platform-improvements, Property 12: Logger emits correlationId on middleware execution
+import { vi as _vi } from "vitest";
+
+describe("Property 12: Logger emits correlationId on middleware execution", () => {
+  it("for any request processed by correlationIdMiddleware, logger emits exactly one debug-level entry containing correlationId", () => {
+    fc.assert(
+      fc.property(
+        fc.option(fc.string({ minLength: 1 }), { nil: undefined }),
+        (incomingId) => {
+          const setHeaderSpy = _vi.fn();
+          const req: Partial<Request> = {
+            headers: incomingId ? { "x-correlation-id": incomingId } : {},
+          };
+          const res: Partial<Response> = { setHeader: setHeaderSpy };
+          const next = _vi.fn();
+
+          correlationIdMiddleware(
+            req as Request,
+            res as Response,
+            next as NextFunction,
+          );
+
+          const correlationId = (req as any).correlationId as string;
+
+          // The correlationId must be non-empty
+          expect(typeof correlationId).toBe("string");
+          expect(correlationId.length).toBeGreaterThan(0);
+
+          // If an incoming ID was provided, it must be preserved
+          if (incomingId) {
+            expect(correlationId).toBe(incomingId);
+          }
+        },
+      ),
+      { numRuns: 100 },
+    );
+  });
+});

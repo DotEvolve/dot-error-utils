@@ -11,3 +11,4 @@ export type { ErrorCategoryType } from "./errors/ErrorCategory";
 export { initializeReactSentry } from "./sentry/configReact";
 export type { ReactSentryConfig } from "./sentry/configReact";
 export { sanitizeData, sanitizeUrl } from "./utils/sanitizer";
+export * as Sentry from "@sentry/react";
