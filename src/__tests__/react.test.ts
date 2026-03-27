@@ -14,6 +14,8 @@ import {
 vi.mock("@sentry/react", () => ({
   init: vi.fn(),
   browserTracingIntegration: vi.fn(() => ({})),
+  browserProfilingIntegration: vi.fn(() => ({})),
+  consoleLoggingIntegration: vi.fn(() => ({})),
   replayIntegration: vi.fn(() => ({})),
 }));
 

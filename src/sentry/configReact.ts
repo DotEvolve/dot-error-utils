@@ -8,6 +8,8 @@ export interface ReactSentryConfig {
   tracesSampleRate?: number;
   replaysSessionSampleRate?: number;
   replaysOnErrorSampleRate?: number;
+  profileSessionSampleRate?: number;
+  enableLogs?: boolean;
   sensitiveFields?: string[];
   debug?: boolean;
 }
@@ -28,6 +30,8 @@ export interface ReactSentryConfig {
  * @param config.tracesSampleRate - Fraction of transactions to sample (0–1)
  * @param config.replaysSessionSampleRate - Fraction of sessions to replay (0–1)
  * @param config.replaysOnErrorSampleRate - Fraction of error sessions to replay (0–1)
+ * @param config.profileSessionSampleRate - Fraction of sessions to profile (0–1)
+ * @param config.enableLogs - Set to true to send console logs to Sentry
  * @param config.sensitiveFields - Additional field names to redact from events
  * @param config.debug - Enable Sentry debug logging (default: `false`)
  * @returns The configured `@sentry/react` module
@@ -60,25 +64,35 @@ export function initializeReactSentry(
     tracesSampleRate = environment === "production" ? 1.0 : 1.0,
     replaysSessionSampleRate = environment === "production" ? 0.1 : 0,
     replaysOnErrorSampleRate = environment === "production" ? 1.0 : 1.0,
+    profileSessionSampleRate = environment === "production" ? 1.0 : 1.0,
+    enableLogs = false,
     sensitiveFields = [],
     debug = false,
   } = config;
+
+  const integrations = [
+    Sentry.browserTracingIntegration(),
+    Sentry.browserProfilingIntegration(),
+    Sentry.replayIntegration({
+      maskAllText: false,
+      blockAllMedia: false,
+    }),
+  ];
+
+  if (enableLogs) {
+    integrations.push(Sentry.consoleLoggingIntegration({ levels: ["log", "warn", "error"] }));
+  }
 
   Sentry.init({
     dsn,
     environment,
     release,
     debug,
-    integrations: [
-      Sentry.browserTracingIntegration(),
-      Sentry.replayIntegration({
-        maskAllText: false,
-        blockAllMedia: false,
-      }),
-    ],
+    integrations,
     tracesSampleRate,
     replaysSessionSampleRate,
     replaysOnErrorSampleRate,
+    profileSessionSampleRate,
 
     // Data sanitization
     beforeSend(event: any, hint: any) {

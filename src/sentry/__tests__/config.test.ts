@@ -381,6 +381,8 @@ describe("Sentry Configuration", () => {
 vi.mock("@sentry/react", () => ({
   init: vi.fn(),
   browserTracingIntegration: vi.fn(() => ({ name: "BrowserTracing" })),
+  browserProfilingIntegration: vi.fn(() => ({ name: "BrowserProfiling" })),
+  consoleLoggingIntegration: vi.fn(() => ({ name: "ConsoleLogging" })),
   replayIntegration: vi.fn(() => ({ name: "Replay" })),
 }));
 
