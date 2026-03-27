@@ -17,3 +17,5 @@ export type { ReactSentryConfig } from "./sentry/configReact";
 
 // Utilities
 export { sanitizeData, sanitizeUrl } from "./utils/sanitizer";
+
+export * as Sentry from "@sentry/react";

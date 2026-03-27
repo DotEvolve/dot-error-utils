@@ -61,6 +61,7 @@ exports.setupSentryErrorHandler = setupSentryErrorHandler;
 const Sentry = __importStar(require("@sentry/node"));
 const ErrorCategory_1 = require("../errors/ErrorCategory");
 const sanitizer_1 = require("../utils/sanitizer");
+const logger_1 = require("../logger");
 /**
  * Categorize error based on status code or error properties
  */
@@ -88,19 +89,32 @@ function categorizeError(error) {
   return ErrorCategory_1.ErrorCategory.SYSTEM;
 }
 /**
- * Centralized error handler middleware with Sentry integration
+ * Centralized error handler middleware with Sentry integration.
  *
- * Must be registered after all routes and after Sentry error handler
+ * Categorizes the error, sets Sentry context/tags, captures 5xx and
+ * non-operational errors to Sentry, and returns a standardized
+ * {@link ErrorResponse} JSON body.
+ *
+ * Must be registered after all routes and after the Sentry error handler
+ * (i.e. after `setupSentryErrorHandler`).
+ *
+ * @param err - The error object; may be an {@link AppError} or any thrown value
+ * @param req - Express request object; `req.correlationId` is used for tracing
+ * @param res - Express response object; JSON error body is written here
+ * @param next - Express next function (required by Express 4-arg error handler signature)
+ * @returns void
+ *
+ * @example
+ * ```ts
+ * import express from 'express';
+ * import { errorHandlerMiddleware } from '@dotevolve/error-utils/node';
+ *
+ * const app = express();
+ * // ... routes ...
+ * app.use(errorHandlerMiddleware);
+ * ```
  */
 function errorHandlerMiddleware(
-  /**
-   * Error Handler Middleware
-   *
-   * @param {any} err - Error object
-   * @param {Request} req - HTTP request object
-   * @param {Response} res - HTTP response object
-   * @param {NextFunction} next - Next middleware function
-   */
   /**
    * Error Handler Middleware
    *
@@ -186,13 +200,41 @@ function errorHandlerMiddleware(
   if (err.details && category === ErrorCategory_1.ErrorCategory.VALIDATION) {
     response.error.details = err.details;
   }
+  // Log system errors
+  if (category === ErrorCategory_1.ErrorCategory.SYSTEM) {
+    (0, logger_1.getLogger)().error(
+      { correlationId, err: err.message },
+      "system error encountered",
+    );
+  }
   res.status(statusCode).json(response);
 }
 /**
- * Setup Sentry error handler
- * Must be placed after all routes but before custom error handler
+ * Register the Sentry error handler and the custom error handler on an Express app.
+ *
+ * Call this once after all routes have been defined. It registers
+ * `Sentry.setupExpressErrorHandler` followed by {@link errorHandlerMiddleware}.
+ *
+ * @param app - Express application instance
+ * @returns void
+ *
+ * @example
+ * ```ts
+ * import express from 'express';
+ * import { setupSentryErrorHandler } from '@dotevolve/error-utils/node';
+ *
+ * const app = express();
+ * // ... routes ...
+ * setupSentryErrorHandler(app);
+ * app.listen(3000);
+ * ```
  */
 function setupSentryErrorHandler(app) {
+  /**
+   * Sets setup sentry error handler
+   *
+   * @param {any} app - The app
+   */
   /**
    * Sets setup sentry error handler
    *

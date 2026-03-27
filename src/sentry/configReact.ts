@@ -80,7 +80,9 @@ export function initializeReactSentry(
   ];
 
   if (enableLogs) {
-    integrations.push(Sentry.consoleLoggingIntegration({ levels: ["log", "warn", "error"] }));
+    integrations.push(
+      Sentry.consoleLoggingIntegration({ levels: ["log", "warn", "error"] }),
+    );
   }
 
   Sentry.init({

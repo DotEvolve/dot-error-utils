@@ -39,6 +39,13 @@ function sanitizeData(data, sensitiveFields = []) {
    * @param {string[]} sensitiveFields=[] - Array of sensitive fields
    * @returns {any} The any
    */
+  /**
+   * Sanitize Data
+   *
+   * @param {any} data - The data to process
+   * @param {string[]} sensitiveFields=[] - Array of sensitive fields
+   * @returns {any} The any
+   */
   if (!data || typeof data !== "object") {
     return data;
   }
@@ -61,6 +68,12 @@ function sanitizeData(data, sensitiveFields = []) {
  * Sanitize URL by removing sensitive query parameters
  */
 function sanitizeUrl(url) {
+  /**
+   * Sanitize Url
+   *
+   * @param {string} url - The url
+   * @returns {string} String result
+   */
   /**
    * Sanitize Url
    *

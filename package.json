@@ -1,6 +1,6 @@
 {
   "name": "@dotevolve/error-utils",
-  "version": "1.0.8",
+  "version": "1.0.10",
   "description": "Shared error handling utilities with Sentry integration for Node.js and Express services",
   "exports": {
     "./node": {
@@ -53,9 +53,9 @@
     "README.md"
   ],
   "dependencies": {
-    "@sentry/node": "^10.40.0",
-    "@sentry/profiling-node": "^10.40.0",
-    "@sentry/react": "^10.44.0",
+    "@sentry/node": "^10.46.0",
+    "@sentry/profiling-node": "^10.46.0",
+    "@sentry/react": "^10.46.0",
     "pino": "^10.3.1"
   }
 }

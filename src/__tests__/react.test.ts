@@ -8,6 +8,7 @@ import {
   ConflictError,
   ErrorCategory,
   initializeReactSentry,
+  Sentry,
 } from "../react";
 
 // Mock @sentry/react to avoid real Sentry calls during tests

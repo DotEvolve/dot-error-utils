@@ -33,3 +33,5 @@ export { withTransaction } from "./db/transactionHandler";
 // Utilities
 export { asyncHandler } from "./utils/asyncHandler";
 export { sanitizeData, sanitizeUrl } from "./utils/sanitizer";
+
+export * as Sentry from "@sentry/node";
