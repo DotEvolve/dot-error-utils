@@ -31,6 +31,14 @@ import { getLogger } from "../logger";
  * ```
  */
 export async function withTransaction<T>(
+  /**
+   * Asynchronously with transaction
+   *
+   * @param {any} prisma - The prisma
+   * @param {Function} callback - Callback function
+   * @param {string} operationName="database_transaction" - The operation name
+   * @returns {Promise} The Promise
+   */
   prisma: any,
   callback: (tx: any) => Promise<T>,
   operationName: string = "database_transaction",

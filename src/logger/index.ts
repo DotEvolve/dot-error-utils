@@ -29,6 +29,12 @@ let singleton: Logger | null = null;
  * ```
  */
 export function createLogger(serviceName: string): Logger {
+  /**
+   * Creates a new logger
+   *
+   * @param {string} serviceName - The service name
+   * @returns {Logger} The Logger
+   */
   if (process.env.NODE_ENV === "test") {
     singleton = noopLogger;
     return noopLogger;
@@ -59,5 +65,10 @@ export function createLogger(serviceName: string): Logger {
  * ```
  */
 export function getLogger(): Logger {
+  /**
+   * Retrieves logger
+   *
+   * @returns {Logger} The Logger
+   */
   return singleton ?? noopLogger;
 }

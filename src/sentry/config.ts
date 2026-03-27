@@ -74,6 +74,12 @@ export function initializeSentry(config: SentryConfig): typeof Sentry {
    * @param {SentryConfig} config - Configuration options
    * @returns {any} The any
    */
+  /**
+   * Initialize Sentry
+   *
+   * @param {SentryConfig} config - Configuration options
+   * @returns {any} The any
+   */
   const {
     dsn,
     environment = process.env.NODE_ENV || "development",

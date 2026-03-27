@@ -45,6 +45,12 @@ export interface ReactSentryConfig {
  * ```
  */
 export function initializeReactSentry(
+  /**
+   * Initialize React Sentry
+   *
+   * @param {ReactSentryConfig} config - Configuration options
+   * @returns {any} The any
+   */
   config: ReactSentryConfig,
 ): typeof Sentry {
   const {
