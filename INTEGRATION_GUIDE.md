@@ -66,10 +66,10 @@ npm install @dotevolve/error-utils
 
 Services to integrate:
 
-- dot-cos-api-gateway
-- dot-cos-workflow-service
-- dot-cos-rule-engine-service
-- dot-cos-admin-dashboard
+- govnix-api-gateway
+- govnix-workflow-service
+- floorix-api
+- dot-portal-api
 
 #### Step 1: Install Dependencies
 
@@ -347,16 +347,16 @@ await withTransaction(
 
 ## Rollout Strategy
 
-1. **Phase 1**: dot-cos-workflow-service (pilot service)
+1. **Phase 1**: govnix-workflow-service (pilot service)
    - Full integration
    - Test all error scenarios
    - Verify Sentry events
 
-2. **Phase 2**: dot-cos-api-gateway
+2. **Phase 2**: govnix-api-gateway
    - Add correlation ID propagation to downstream services
    - Test distributed tracing
 
-3. **Phase 3**: dot-cos-rule-engine-service & dot-cos-admin-dashboard
+3. **Phase 3**: floorix-api & govnix-admin
    - Parallel integration
    - Verify cross-service correlation
 
