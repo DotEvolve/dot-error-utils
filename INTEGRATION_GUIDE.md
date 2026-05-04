@@ -1,6 +1,6 @@
 # Integration Guide for dot-error-utils
 
-This guide walks through integrating `@dotevolve/error-utils` into each dot-cOS service.
+This guide walks through integrating `@dotevolve/error-utils` into each DotEvolve, Govnix and Floorix service.
 
 ## Package Structure
 
@@ -205,7 +205,7 @@ SENTRY_ENVIRONMENT=production
 
 ### Frontend (React + Vite)
 
-Service: dot-cos-frontend
+Service: govnix-app
 
 #### Step 1: Install Dependencies
 
@@ -273,7 +273,7 @@ function App() {
 
 ### Chrome Extension
 
-Service: dot-cos-mca-extension
+Service: govnix-mca-extension
 
 #### Step 1: Enhance Existing Sentry Setup
 

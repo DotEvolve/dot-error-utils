@@ -1,6 +1,6 @@
 # @dotevolve/error-utils
 
-Shared error handling utilities with Sentry integration for dot-cOS microservices.
+Shared error handling utilities with Sentry integration for DotEvolve, Govnix and Floorix microservices.
 
 ## Features
 
