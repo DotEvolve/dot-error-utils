@@ -1,6 +1,6 @@
 {
   "name": "@dotevolve/error-utils",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "description": "Shared error handling utilities with Sentry integration for Node.js and Express services",
   "exports": {
     ".": {
