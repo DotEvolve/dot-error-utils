@@ -66,7 +66,7 @@ npm install @dotevolve/error-utils
 
 Services to integrate:
 
-- govnix-api-gateway
+- govnix-api
 - govnix-workflow-service
 - floorix-api
 - dot-portal-api
@@ -352,7 +352,7 @@ await withTransaction(
    - Test all error scenarios
    - Verify Sentry events
 
-2. **Phase 2**: govnix-api-gateway
+2. **Phase 2**: govnix-api
    - Add correlation ID propagation to downstream services
    - Test distributed tracing
 
