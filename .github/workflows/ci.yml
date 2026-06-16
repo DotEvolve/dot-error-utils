@@ -12,10 +12,6 @@ jobs:
         with:
           node-version: "24.x"
           cache: "npm"
-          registry-url: "https://npm.pkg.github.com"
-          scope: "@dotevolve"
-      - run: rm -f package-lock.json && npm install
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - run: rm package-lock.json && npm install
       - run: npm run build
       - run: npm test
