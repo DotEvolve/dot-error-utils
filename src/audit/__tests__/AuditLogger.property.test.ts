@@ -113,17 +113,15 @@ describe("AuditLogger Property Tests", () => {
   it("Property 4: For any batchSize, exactly batchSize events trigger exactly one transport call", async () => {
     await fc.assert(
       fc.asyncProperty(
-        fc
-          .integer({ min: 1, max: 50 })
-          .chain((batchSize) =>
-            fc.tuple(
-              fc.constant(batchSize),
-              fc.array(auditLogEntryArb, {
-                minLength: batchSize,
-                maxLength: batchSize,
-              }),
-            ),
+        fc.integer({ min: 1, max: 50 }).chain((batchSize) =>
+          fc.tuple(
+            fc.constant(batchSize),
+            fc.array(auditLogEntryArb, {
+              minLength: batchSize,
+              maxLength: batchSize,
+            }),
           ),
+        ),
         async ([batchSize, events]) => {
           let callCount = 0;
           let receivedBatch: AuditLogEntry[] = [];
