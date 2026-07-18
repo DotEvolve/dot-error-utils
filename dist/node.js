@@ -32,6 +32,9 @@ var __importStar = (this && this.__importStar) || (function () {
         return result;
     };
 })();
+var __exportStar = (this && this.__exportStar) || function(m, exports) {
+    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Sentry = exports.sanitizeUrl = exports.sanitizeData = exports.asyncHandler = exports.getLogger = exports.createLogger = exports.withTransaction = exports.initializeSentry = exports.attachSentryContext = exports.setupSentryMiddleware = exports.setupSentryErrorHandler = exports.errorHandlerMiddleware = exports.correlationIdMiddleware = exports.ErrorCategory = exports.ConflictError = exports.NotFoundError = exports.AuthorizationError = exports.AuthenticationError = exports.ValidationError = exports.AppError = void 0;
 // Error classes
@@ -70,3 +73,4 @@ var sanitizer_1 = require("./utils/sanitizer");
 Object.defineProperty(exports, "sanitizeData", { enumerable: true, get: function () { return sanitizer_1.sanitizeData; } });
 Object.defineProperty(exports, "sanitizeUrl", { enumerable: true, get: function () { return sanitizer_1.sanitizeUrl; } });
 exports.Sentry = __importStar(require("@sentry/node"));
+__exportStar(require("./audit"), exports);

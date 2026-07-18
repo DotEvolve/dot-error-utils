@@ -12,3 +12,4 @@ export { createLogger, getLogger } from "./logger";
 export { asyncHandler } from "./utils/asyncHandler";
 export { sanitizeData, sanitizeUrl } from "./utils/sanitizer";
 export * as Sentry from "@sentry/node";
+export * from "./audit";
