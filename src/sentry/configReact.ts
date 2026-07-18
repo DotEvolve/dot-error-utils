@@ -70,7 +70,7 @@ export function initializeReactSentry(
     debug = false,
   } = config;
 
-  const integrations = [
+  const integrations: any[] = [
     Sentry.browserTracingIntegration(),
     Sentry.browserProfilingIntegration(),
     Sentry.replayIntegration({
