@@ -3,7 +3,7 @@ import { Writable } from "stream";
 import * as Sentry from "@sentry/node";
 import type { BrowserLogger } from "../types/logger";
 
-const PINO_TO_SENTRY_LEVEL: Record<number, Sentry.SeverityLevel> = {
+export const PINO_TO_SENTRY_LEVEL: Record<number, Sentry.SeverityLevel> = {
   10: "debug",
   20: "debug",
   30: "info",
@@ -12,7 +12,7 @@ const PINO_TO_SENTRY_LEVEL: Record<number, Sentry.SeverityLevel> = {
   60: "fatal",
 };
 
-function createSentryStream(): Writable {
+export function createSentryStream(): Writable {
   return new Writable({
     write(chunk: Buffer, _encoding, callback) {
       try {
