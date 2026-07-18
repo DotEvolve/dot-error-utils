@@ -24,4 +24,4 @@ export { withTransaction } from "./db/transactionHandler";
 export { asyncHandler } from "./utils/asyncHandler";
 export { sanitizeData, sanitizeUrl } from "./utils/sanitizer";
 
-export * from './audit';
+export * from "./audit";

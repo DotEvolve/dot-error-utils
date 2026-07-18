@@ -47,8 +47,6 @@ beforeEach(() => {
 });
 
 describe("getLogger — before createLogger is called", () => {
-
-
   it("returns a noop logger whose methods are all silent no-ops", async () => {
     const { getLogger, addBreadcrumb, captureException } = await freshModule();
 
@@ -110,9 +108,7 @@ describe("logger.debug", () => {
     const { createLogger, addBreadcrumb, captureException } =
       await freshModule();
 
-    const consoleSpy = vi
-      .spyOn(console, "debug")
-      .mockImplementation(() => {});
+    const consoleSpy = vi.spyOn(console, "debug").mockImplementation(() => {});
 
     const logger = createLogger("debug-svc");
     logger.debug("a debug message");
@@ -128,9 +124,7 @@ describe("logger.debug", () => {
     const { createLogger, addBreadcrumb, captureException } =
       await freshModule();
 
-    const consoleSpy = vi
-      .spyOn(console, "debug")
-      .mockImplementation(() => {});
+    const consoleSpy = vi.spyOn(console, "debug").mockImplementation(() => {});
 
     const logger = createLogger("debug-svc");
     logger.debug({ requestId: "r1" }, "a debug message");

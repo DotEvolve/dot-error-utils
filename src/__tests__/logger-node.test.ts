@@ -48,7 +48,10 @@ describe("createSentryStream", () => {
   });
 
   it("reconstructs serialized error objects before captureException", async () => {
-    await writeToStream({ level: 50, err: { message: "db timeout", type: "TimeoutError" } });
+    await writeToStream({
+      level: 50,
+      err: { message: "db timeout", type: "TimeoutError" },
+    });
     expect(Sentry.captureException).toHaveBeenCalledOnce();
     const [err] = vi.mocked(Sentry.captureException).mock.calls[0];
     expect(err).toBeInstanceOf(Error);
@@ -74,14 +77,14 @@ describe("createLogger with NODE_ENV = 'test'", () => {
   it("returns noopLogger and does not create sentry stream", () => {
     const originalEnv = process.env.NODE_ENV;
     process.env.NODE_ENV = "test";
-    
+
     const logger = createLogger("test-svc");
     expect(logger).toBe(getLogger());
-    
+
     expect(() => logger.error("boom")).not.toThrow();
     // Since it's noop, it won't write to any stream
     expect(Sentry.captureException).not.toHaveBeenCalled();
-    
+
     process.env.NODE_ENV = originalEnv;
   });
 });

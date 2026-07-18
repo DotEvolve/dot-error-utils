@@ -32,7 +32,8 @@ async function freshModule() {
   const loggerModule = await import("../logger/react");
 
   const sentryInit = sentryModule.init as ReturnType<typeof vi.fn>;
-  const browserTracingIntegration = sentryModule.browserTracingIntegration as ReturnType<typeof vi.fn>;
+  const browserTracingIntegration =
+    sentryModule.browserTracingIntegration as ReturnType<typeof vi.fn>;
   const createLogger = loggerModule.createLogger as ReturnType<typeof vi.fn>;
 
   // Clear only these specific mocks — do not call vi.clearAllMocks() to

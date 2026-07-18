@@ -24,5 +24,9 @@ export { sanitizeData, sanitizeUrl } from "./utils/sanitizer";
 
 // Audit Logger
 export { AuditLogger } from "./audit/AuditLogger";
-export type { AuditLogEntry, AuditTransport, AuditLoggerConfig } from "./audit/types";
+export type {
+  AuditLogEntry,
+  AuditTransport,
+  AuditLoggerConfig,
+} from "./audit/types";
 export { auditLogEntrySchema } from "./audit/schema";

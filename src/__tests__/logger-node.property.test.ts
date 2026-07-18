@@ -14,7 +14,7 @@ describe("Pino level to Sentry level mapping", () => {
         const sentryLevel = PINO_TO_SENTRY_LEVEL[level];
         expect(validSentryLevels).toContain(sentryLevel);
       }),
-      { numRuns: 100 }
+      { numRuns: 100 },
     );
   });
 });

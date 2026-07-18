@@ -21,12 +21,7 @@ const mockAddBreadcrumb = vi.mocked(Sentry.addBreadcrumb);
  */
 const logMetaArb = fc.dictionary(
   fc.stringMatching(/^[a-zA-Z][a-zA-Z0-9_]*$/),
-  fc.oneof(
-    fc.string(),
-    fc.integer(),
-    fc.boolean(),
-    fc.constant(null),
-  ),
+  fc.oneof(fc.string(), fc.integer(), fc.boolean(), fc.constant(null)),
 );
 
 /** Non-empty string message arbitrary */
@@ -50,32 +45,42 @@ beforeEach(() => {
 describe("Property 1: Error/fatal log levels always produce Sentry exceptions", () => {
   it("logger.error(meta, msg) always calls captureException with an Error", () => {
     fc.assert(
-      fc.property(serviceNameArb, logMetaArb, msgArb, (serviceName, meta, msg) => {
-        vi.clearAllMocks();
-        const logger = createLogger(serviceName);
+      fc.property(
+        serviceNameArb,
+        logMetaArb,
+        msgArb,
+        (serviceName, meta, msg) => {
+          vi.clearAllMocks();
+          const logger = createLogger(serviceName);
 
-        logger.error(meta, msg);
+          logger.error(meta, msg);
 
-        expect(mockCaptureException).toHaveBeenCalledTimes(1);
-        const capturedArg = mockCaptureException.mock.calls[0][0];
-        expect(capturedArg).toBeInstanceOf(Error);
-      }),
+          expect(mockCaptureException).toHaveBeenCalledTimes(1);
+          const capturedArg = mockCaptureException.mock.calls[0][0];
+          expect(capturedArg).toBeInstanceOf(Error);
+        },
+      ),
       { numRuns: 100 },
     );
   });
 
   it("logger.fatal(meta, msg) always calls captureException with an Error", () => {
     fc.assert(
-      fc.property(serviceNameArb, logMetaArb, msgArb, (serviceName, meta, msg) => {
-        vi.clearAllMocks();
-        const logger = createLogger(serviceName);
+      fc.property(
+        serviceNameArb,
+        logMetaArb,
+        msgArb,
+        (serviceName, meta, msg) => {
+          vi.clearAllMocks();
+          const logger = createLogger(serviceName);
 
-        logger.fatal(meta, msg);
+          logger.fatal(meta, msg);
 
-        expect(mockCaptureException).toHaveBeenCalledTimes(1);
-        const capturedArg = mockCaptureException.mock.calls[0][0];
-        expect(capturedArg).toBeInstanceOf(Error);
-      }),
+          expect(mockCaptureException).toHaveBeenCalledTimes(1);
+          const capturedArg = mockCaptureException.mock.calls[0][0];
+          expect(capturedArg).toBeInstanceOf(Error);
+        },
+      ),
       { numRuns: 100 },
     );
   });
@@ -88,34 +93,44 @@ describe("Property 1: Error/fatal log levels always produce Sentry exceptions", 
 describe("Property 2: Info/warn log levels always produce Sentry breadcrumbs", () => {
   it("logger.info(meta, msg) always calls addBreadcrumb with level 'info'", () => {
     fc.assert(
-      fc.property(serviceNameArb, logMetaArb, msgArb, (serviceName, meta, msg) => {
-        vi.clearAllMocks();
-        const logger = createLogger(serviceName);
+      fc.property(
+        serviceNameArb,
+        logMetaArb,
+        msgArb,
+        (serviceName, meta, msg) => {
+          vi.clearAllMocks();
+          const logger = createLogger(serviceName);
 
-        logger.info(meta, msg);
+          logger.info(meta, msg);
 
-        expect(mockAddBreadcrumb).toHaveBeenCalledTimes(1);
-        const breadcrumb = mockAddBreadcrumb.mock.calls[0][0];
-        expect(breadcrumb.level).toBe("info");
-        expect(mockCaptureException).not.toHaveBeenCalled();
-      }),
+          expect(mockAddBreadcrumb).toHaveBeenCalledTimes(1);
+          const breadcrumb = mockAddBreadcrumb.mock.calls[0][0];
+          expect(breadcrumb.level).toBe("info");
+          expect(mockCaptureException).not.toHaveBeenCalled();
+        },
+      ),
       { numRuns: 100 },
     );
   });
 
   it("logger.warn(meta, msg) always calls addBreadcrumb with level 'warning'", () => {
     fc.assert(
-      fc.property(serviceNameArb, logMetaArb, msgArb, (serviceName, meta, msg) => {
-        vi.clearAllMocks();
-        const logger = createLogger(serviceName);
+      fc.property(
+        serviceNameArb,
+        logMetaArb,
+        msgArb,
+        (serviceName, meta, msg) => {
+          vi.clearAllMocks();
+          const logger = createLogger(serviceName);
 
-        logger.warn(meta, msg);
+          logger.warn(meta, msg);
 
-        expect(mockAddBreadcrumb).toHaveBeenCalledTimes(1);
-        const breadcrumb = mockAddBreadcrumb.mock.calls[0][0];
-        expect(breadcrumb.level).toBe("warning");
-        expect(mockCaptureException).not.toHaveBeenCalled();
-      }),
+          expect(mockAddBreadcrumb).toHaveBeenCalledTimes(1);
+          const breadcrumb = mockAddBreadcrumb.mock.calls[0][0];
+          expect(breadcrumb.level).toBe("warning");
+          expect(mockCaptureException).not.toHaveBeenCalled();
+        },
+      ),
       { numRuns: 100 },
     );
   });
@@ -128,15 +143,20 @@ describe("Property 2: Info/warn log levels always produce Sentry breadcrumbs", (
 describe("Property 3: Debug log level never touches Sentry", () => {
   it("logger.debug(meta, msg) never calls captureException or addBreadcrumb", () => {
     fc.assert(
-      fc.property(serviceNameArb, logMetaArb, msgArb, (serviceName, meta, msg) => {
-        vi.clearAllMocks();
-        const logger = createLogger(serviceName);
+      fc.property(
+        serviceNameArb,
+        logMetaArb,
+        msgArb,
+        (serviceName, meta, msg) => {
+          vi.clearAllMocks();
+          const logger = createLogger(serviceName);
 
-        logger.debug(meta, msg);
+          logger.debug(meta, msg);
 
-        expect(mockCaptureException).not.toHaveBeenCalled();
-        expect(mockAddBreadcrumb).not.toHaveBeenCalled();
-      }),
+          expect(mockCaptureException).not.toHaveBeenCalled();
+          expect(mockAddBreadcrumb).not.toHaveBeenCalled();
+        },
+      ),
       { numRuns: 100 },
     );
   });

@@ -3,8 +3,8 @@ export interface AuditLogEntry {
   tenantId: string;
   action: string;
   actorId: string;
-  actorType: 'user' | 'service';
-  
+  actorType: "user" | "service";
+
   // Optional
   timestamp?: string; // Auto-generated as ISO-8601 if omitted
   entityId?: string;
