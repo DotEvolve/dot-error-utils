@@ -11,7 +11,9 @@ export interface BrowserSentryConfig {
   sensitiveFields?: string[];
 }
 
-export function initializeBrowserSentry(config: BrowserSentryConfig): typeof Sentry {
+export function initializeBrowserSentry(
+  config: BrowserSentryConfig,
+): typeof Sentry {
   const {
     dsn,
     serviceName = "browser",

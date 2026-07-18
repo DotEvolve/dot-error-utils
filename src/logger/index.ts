@@ -79,7 +79,10 @@ export function createLogger(serviceName: string): BrowserLogger {
       base: { service: serviceName },
       timestamp: pino.stdTimeFunctions.isoTime,
     },
-    pino.multistream([{ stream: process.stdout }, { stream: createSentryStream() }])
+    pino.multistream([
+      { stream: process.stdout },
+      { stream: createSentryStream() },
+    ]),
   );
 
   singleton = pinoInstance as unknown as BrowserLogger;

@@ -1,27 +1,44 @@
 import * as Sentry from "@sentry/react";
 import type { BrowserLogger, LogMeta } from "../types/logger";
 
-function createBrowserLogger(serviceName: string, bindings: LogMeta = {}): BrowserLogger {
+function createBrowserLogger(
+  serviceName: string,
+  bindings: LogMeta = {},
+): BrowserLogger {
   const buildExtra = (obj?: LogMeta | Error | string): LogMeta => ({
     service: serviceName,
     ...bindings,
-    ...(obj && typeof obj === "object" && !(obj instanceof Error) ? (obj as LogMeta) : {}),
+    ...(obj && typeof obj === "object" && !(obj instanceof Error)
+      ? (obj as LogMeta)
+      : {}),
   });
 
   return {
     debug(obj: LogMeta | string, msg?: string) {
       const message = typeof obj === "string" ? obj : (msg ?? "");
-      console.debug(`[${serviceName}]`, message, typeof obj === "object" ? obj : "");
+      console.debug(
+        `[${serviceName}]`,
+        message,
+        typeof obj === "object" ? obj : "",
+      );
     },
     info(obj: LogMeta | string, msg?: string) {
       const message = typeof obj === "string" ? obj : (msg ?? "");
       console.info(`[${serviceName}]`, message);
-      Sentry.addBreadcrumb({ message, level: "info", data: buildExtra(obj as LogMeta) });
+      Sentry.addBreadcrumb({
+        message,
+        level: "info",
+        data: buildExtra(obj as LogMeta),
+      });
     },
     warn(obj: LogMeta | string, msg?: string) {
       const message = typeof obj === "string" ? obj : (msg ?? "");
       console.warn(`[${serviceName}]`, message);
-      Sentry.addBreadcrumb({ message, level: "warning", data: buildExtra(obj as LogMeta) });
+      Sentry.addBreadcrumb({
+        message,
+        level: "warning",
+        data: buildExtra(obj as LogMeta),
+      });
     },
     error(obj: LogMeta | Error | string, msg?: string) {
       const message = typeof obj === "string" ? obj : (msg ?? "");
@@ -33,10 +50,16 @@ function createBrowserLogger(serviceName: string, bindings: LogMeta = {}): Brows
       const message = typeof obj === "string" ? obj : (msg ?? "");
       const error = obj instanceof Error ? obj : new Error(message);
       console.error(`[${serviceName}][FATAL]`, message, obj);
-      Sentry.captureException(error, { level: "fatal", extra: buildExtra(obj) });
+      Sentry.captureException(error, {
+        level: "fatal",
+        extra: buildExtra(obj),
+      });
     },
     child(childBindings: LogMeta): BrowserLogger {
-      return createBrowserLogger(serviceName, { ...bindings, ...childBindings });
+      return createBrowserLogger(serviceName, {
+        ...bindings,
+        ...childBindings,
+      });
     },
   };
 }
