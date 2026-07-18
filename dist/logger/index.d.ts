@@ -1,4 +1,8 @@
+import { Writable } from "stream";
+import * as Sentry from "@sentry/node";
 import type { BrowserLogger } from "../types/logger";
+export declare const PINO_TO_SENTRY_LEVEL: Record<number, Sentry.SeverityLevel>;
+export declare function createSentryStream(): Writable;
 /**
  * Create (or replace) the module-level logger singleton.
  *

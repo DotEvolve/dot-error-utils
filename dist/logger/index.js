@@ -36,12 +36,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.PINO_TO_SENTRY_LEVEL = void 0;
+exports.createSentryStream = createSentryStream;
 exports.createLogger = createLogger;
 exports.getLogger = getLogger;
 const pino_1 = __importDefault(require("pino"));
 const stream_1 = require("stream");
 const Sentry = __importStar(require("@sentry/node"));
-const PINO_TO_SENTRY_LEVEL = {
+exports.PINO_TO_SENTRY_LEVEL = {
     10: "debug",
     20: "debug",
     30: "info",
@@ -55,7 +57,7 @@ function createSentryStream() {
             try {
                 const record = JSON.parse(chunk.toString());
                 const { level, msg, err, ...extra } = record;
-                const sentryLevel = PINO_TO_SENTRY_LEVEL[level] ?? "info";
+                const sentryLevel = exports.PINO_TO_SENTRY_LEVEL[level] ?? "info";
                 if (level >= 50) {
                     // Pino serializes errors as plain objects { message, stack, type },
                     // not actual Error instances. Check for the serialized shape.
