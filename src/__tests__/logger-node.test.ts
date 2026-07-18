@@ -26,8 +26,8 @@ describe("createSentryStream", () => {
     expect(Sentry.captureException).toHaveBeenCalledOnce();
     const [err, opts] = vi.mocked(Sentry.captureException).mock.calls[0];
     expect(err).toBeInstanceOf(Error);
-    expect(err.message).toBe("server crash");
-    expect(opts?.level).toBe("error");
+    expect((err as Error).message).toBe("server crash");
+    expect((opts as any)?.level).toBe("error");
     expect(Sentry.addBreadcrumb).not.toHaveBeenCalled();
   });
 
@@ -52,7 +52,7 @@ describe("createSentryStream", () => {
     expect(Sentry.captureException).toHaveBeenCalledOnce();
     const [err] = vi.mocked(Sentry.captureException).mock.calls[0];
     expect(err).toBeInstanceOf(Error);
-    expect(err.message).toBe("db timeout");
+    expect((err as Error).message).toBe("db timeout");
   });
 
   it("swallows JSON parse failures and still calls the callback", () => {
