@@ -276,9 +276,11 @@ describe("Property 6: Child logger inherits bindings", () => {
 
           const extra = options.extra as Record<string, unknown>;
 
-          // All parent bindings must appear in extra
+          // All parent bindings must appear in extra (unless overridden by child)
           for (const [key, value] of Object.entries(parentBindings)) {
-            expect(extra[key]).toEqual(value);
+            if (!(key in childBindings)) {
+              expect(extra[key]).toEqual(value);
+            }
           }
 
           // All child bindings must appear in extra
@@ -310,9 +312,11 @@ describe("Property 6: Child logger inherits bindings", () => {
           const data = breadcrumb.data as Record<string, unknown> | undefined;
           expect(data).toBeDefined();
 
-          // All parent bindings must appear in breadcrumb data
+          // All parent bindings must appear in breadcrumb data (unless overridden by child)
           for (const [key, value] of Object.entries(parentBindings)) {
-            expect(data![key]).toEqual(value);
+            if (!(key in childBindings)) {
+              expect(data![key]).toEqual(value);
+            }
           }
 
           // All child bindings must appear in breadcrumb data
