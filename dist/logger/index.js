@@ -110,7 +110,10 @@ function createLogger(serviceName) {
         level: process.env.LOG_LEVEL ?? "info",
         base: { service: serviceName },
         timestamp: pino_1.default.stdTimeFunctions.isoTime,
-    }, pino_1.default.multistream([{ stream: process.stdout }, { stream: createSentryStream() }]));
+    }, pino_1.default.multistream([
+        { stream: process.stdout },
+        { stream: createSentryStream() },
+    ]));
     singleton = pinoInstance;
     return singleton;
 }
