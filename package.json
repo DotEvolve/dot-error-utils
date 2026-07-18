@@ -1,6 +1,6 @@
 {
   "name": "@dotevolve/error-utils",
-  "version": "1.0.10",
+  "version": "1.0.12",
   "description": "Shared error handling utilities with Sentry integration for Node.js and Express services",
   "exports": {
     ".": {
@@ -22,6 +22,11 @@
       "types": "./dist/react.d.ts",
       "import": "./dist/react.js",
       "require": "./dist/react.js"
+    },
+    "./browser": {
+      "types": "./dist/browser.d.ts",
+      "import": "./dist/browser.js",
+      "require": "./dist/browser.js"
     }
   },
   "scripts": {
@@ -67,6 +72,7 @@
     "README.md"
   ],
   "dependencies": {
+    "@sentry/browser": "^10.46.0",
     "@sentry/node": "^10.46.0",
     "@sentry/profiling-node": "^10.46.0",
     "@sentry/react": "^10.46.0",

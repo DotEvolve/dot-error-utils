@@ -1,12 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ConflictError =
-  exports.NotFoundError =
-  exports.AuthorizationError =
-  exports.AuthenticationError =
-  exports.ValidationError =
-  exports.AppError =
-    void 0;
+exports.ConflictError = exports.NotFoundError = exports.AuthorizationError = exports.AuthenticationError = exports.ValidationError = exports.AppError = void 0;
 const ErrorCategory_1 = require("./ErrorCategory");
 /**
  * Base application error class with Sentry integration support.
@@ -22,43 +16,37 @@ const ErrorCategory_1 = require("./ErrorCategory");
  * ```
  */
 class AppError extends Error {
-  /**
-   * @param message - Human-readable error description
-   * @param statusCode - HTTP status code to return to the client
-   * @param category - Error category from {@link ErrorCategory}
-   * @param details - Optional structured details (e.g. field-level validation errors)
-   * @param correlationId - Optional request correlation ID for tracing
-   */
-  constructor(
-    message,
-    statusCode,
-    category,
-    details = undefined,
-    correlationId,
-  ) {
-    super(message);
-    this.statusCode = statusCode;
-    this.category = category;
-    this.details = details;
-    this.isOperational = true;
-    this.correlationId = correlationId;
-    // Maintains proper stack trace for where our error was thrown
-    Error.captureStackTrace(this, this.constructor);
-  }
-  /**
-   * Serialize error details for Sentry context.
-   *
-   * @returns A plain object suitable for `Sentry.setContext()`
-   */
-  toSentryContext() {
-    return {
-      category: this.category,
-      statusCode: this.statusCode,
-      details: this.details,
-      isOperational: this.isOperational,
-      correlationId: this.correlationId,
-    };
-  }
+    /**
+     * @param message - Human-readable error description
+     * @param statusCode - HTTP status code to return to the client
+     * @param category - Error category from {@link ErrorCategory}
+     * @param details - Optional structured details (e.g. field-level validation errors)
+     * @param correlationId - Optional request correlation ID for tracing
+     */
+    constructor(message, statusCode, category, details = undefined, correlationId) {
+        super(message);
+        this.statusCode = statusCode;
+        this.category = category;
+        this.details = details;
+        this.isOperational = true;
+        this.correlationId = correlationId;
+        // Maintains proper stack trace for where our error was thrown
+        Error.captureStackTrace(this, this.constructor);
+    }
+    /**
+     * Serialize error details for Sentry context.
+     *
+     * @returns A plain object suitable for `Sentry.setContext()`
+     */
+    toSentryContext() {
+        return {
+            category: this.category,
+            statusCode: this.statusCode,
+            details: this.details,
+            isOperational: this.isOperational,
+            correlationId: this.correlationId,
+        };
+    }
 }
 exports.AppError = AppError;
 /**
@@ -73,20 +61,14 @@ exports.AppError = AppError;
  * ```
  */
 class ValidationError extends AppError {
-  /**
-   * @param message - Summary of the validation failure
-   * @param details - Map of field names to arrays of error strings
-   * @param correlationId - Optional request correlation ID
-   */
-  constructor(message, details, correlationId) {
-    super(
-      message,
-      400,
-      ErrorCategory_1.ErrorCategory.VALIDATION,
-      details,
-      correlationId,
-    );
-  }
+    /**
+     * @param message - Summary of the validation failure
+     * @param details - Map of field names to arrays of error strings
+     * @param correlationId - Optional request correlation ID
+     */
+    constructor(message, details, correlationId) {
+        super(message, 400, ErrorCategory_1.ErrorCategory.VALIDATION, details, correlationId);
+    }
 }
 exports.ValidationError = ValidationError;
 /**
@@ -100,19 +82,13 @@ exports.ValidationError = ValidationError;
  * ```
  */
 class AuthenticationError extends AppError {
-  /**
-   * @param message - Error description (default: `"Authentication required"`)
-   * @param correlationId - Optional request correlation ID
-   */
-  constructor(message = "Authentication required", correlationId) {
-    super(
-      message,
-      401,
-      ErrorCategory_1.ErrorCategory.AUTHENTICATION,
-      undefined,
-      correlationId,
-    );
-  }
+    /**
+     * @param message - Error description (default: `"Authentication required"`)
+     * @param correlationId - Optional request correlation ID
+     */
+    constructor(message = "Authentication required", correlationId) {
+        super(message, 401, ErrorCategory_1.ErrorCategory.AUTHENTICATION, undefined, correlationId);
+    }
 }
 exports.AuthenticationError = AuthenticationError;
 /**
@@ -126,19 +102,13 @@ exports.AuthenticationError = AuthenticationError;
  * ```
  */
 class AuthorizationError extends AppError {
-  /**
-   * @param message - Error description (default: `"Insufficient permissions"`)
-   * @param correlationId - Optional request correlation ID
-   */
-  constructor(message = "Insufficient permissions", correlationId) {
-    super(
-      message,
-      403,
-      ErrorCategory_1.ErrorCategory.AUTHORIZATION,
-      undefined,
-      correlationId,
-    );
-  }
+    /**
+     * @param message - Error description (default: `"Insufficient permissions"`)
+     * @param correlationId - Optional request correlation ID
+     */
+    constructor(message = "Insufficient permissions", correlationId) {
+        super(message, 403, ErrorCategory_1.ErrorCategory.AUTHORIZATION, undefined, correlationId);
+    }
 }
 exports.AuthorizationError = AuthorizationError;
 /**
@@ -152,23 +122,17 @@ exports.AuthorizationError = AuthorizationError;
  * ```
  */
 class NotFoundError extends AppError {
-  /**
-   * @param resource - Name of the resource type (e.g. `"Tenant"`)
-   * @param identifier - Optional identifier that was looked up
-   * @param correlationId - Optional request correlation ID
-   */
-  constructor(resource, identifier, correlationId) {
-    const message = identifier
-      ? `${resource} not found: ${identifier}`
-      : `${resource} not found`;
-    super(
-      message,
-      404,
-      ErrorCategory_1.ErrorCategory.NOT_FOUND,
-      undefined,
-      correlationId,
-    );
-  }
+    /**
+     * @param resource - Name of the resource type (e.g. `"Tenant"`)
+     * @param identifier - Optional identifier that was looked up
+     * @param correlationId - Optional request correlation ID
+     */
+    constructor(resource, identifier, correlationId) {
+        const message = identifier
+            ? `${resource} not found: ${identifier}`
+            : `${resource} not found`;
+        super(message, 404, ErrorCategory_1.ErrorCategory.NOT_FOUND, undefined, correlationId);
+    }
 }
 exports.NotFoundError = NotFoundError;
 /**
@@ -183,12 +147,12 @@ exports.NotFoundError = NotFoundError;
  * ```
  */
 class ConflictError extends AppError {
-  /**
-   * @param message - Description of the conflict
-   * @param details - Optional structured details about the conflict
-   */
-  constructor(message, details) {
-    super(message, 409, ErrorCategory_1.ErrorCategory.CONFLICT, details);
-  }
+    /**
+     * @param message - Description of the conflict
+     * @param details - Optional structured details about the conflict
+     */
+    constructor(message, details) {
+        super(message, 409, ErrorCategory_1.ErrorCategory.CONFLICT, details);
+    }
 }
 exports.ConflictError = ConflictError;

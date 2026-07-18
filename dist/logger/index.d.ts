@@ -1,4 +1,4 @@
-import { Logger } from "pino";
+import type { BrowserLogger } from "../types/logger";
 /**
  * Create (or replace) the module-level logger singleton.
  *
@@ -8,14 +8,8 @@ import { Logger } from "pino";
  *
  * @param serviceName - Identifies the service in every log line (`service` field)
  * @returns The created logger instance
- *
- * @example
- * ```ts
- * import { createLogger } from '@dotevolve/error-utils/node';
- * createLogger('my-api');
- * ```
  */
-export declare function createLogger(serviceName: string): Logger;
+export declare function createLogger(serviceName: string): BrowserLogger;
 /**
  * Return the current logger singleton.
  *
@@ -23,11 +17,5 @@ export declare function createLogger(serviceName: string): Logger;
  * so callers never need to null-check.
  *
  * @returns The active logger (or a no-op fallback)
- *
- * @example
- * ```ts
- * import { getLogger } from '@dotevolve/error-utils/node';
- * getLogger().info({ correlationId }, 'request received');
- * ```
  */
-export declare function getLogger(): Logger;
+export declare function getLogger(): BrowserLogger;

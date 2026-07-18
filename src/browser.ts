@@ -11,15 +11,13 @@ export {
 export { ErrorCategory } from "./errors/ErrorCategory";
 export type { ErrorCategoryType } from "./errors/ErrorCategory";
 
-// React Sentry configuration
-export { initializeReactSentry } from "./sentry/configReact";
-export type { ReactSentryConfig } from "./sentry/configReact";
+// Browser Sentry initializer (uses @sentry/browser — safe for Service Workers)
+export { initializeBrowserSentry } from "./sentry/configBrowser";
+export type { BrowserSentryConfig } from "./sentry/configBrowser";
 
-// Utilities
-export { sanitizeData, sanitizeUrl } from "./utils/sanitizer";
-
-// Logger (browser-safe, no pino)
+// Browser logger (no pino — safe for all browser contexts)
 export { createLogger, getLogger } from "./logger/react";
 export type { BrowserLogger, LogMeta } from "./types/logger";
 
-export * as Sentry from "@sentry/react";
+// Utilities
+export { sanitizeData, sanitizeUrl } from "./utils/sanitizer";

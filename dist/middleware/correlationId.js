@@ -28,26 +28,20 @@ const logger_1 = require("../logger");
  * ```
  */
 function correlationIdMiddleware(
-  /**
-   * Correlation Id Middleware
-   *
-   * @param {Request} req - HTTP request object
-   * @param {Response} res - HTTP response object
-   * @param {NextFunction} next - Next middleware function
-   */
-  req,
-  res,
-  next,
-) {
-  // Generate new ID or use existing from header
-  req.correlationId =
-    req.headers?.["x-correlation-id"] || (0, crypto_1.randomUUID)();
-  // Set response header for client
-  res.setHeader("X-Correlation-Id", req.correlationId);
-  res.setHeader("X-Sentry-Trace-Id", req.correlationId);
-  (0, logger_1.getLogger)().debug(
-    { correlationId: req.correlationId },
-    "correlation ID assigned",
-  );
-  next();
+/**
+ * Correlation Id Middleware
+ *
+ * @param {Request} req - HTTP request object
+ * @param {Response} res - HTTP response object
+ * @param {NextFunction} next - Next middleware function
+ */
+req, res, next) {
+    // Generate new ID or use existing from header
+    req.correlationId =
+        req.headers?.["x-correlation-id"] || (0, crypto_1.randomUUID)();
+    // Set response header for client
+    res.setHeader("X-Correlation-Id", req.correlationId);
+    res.setHeader("X-Sentry-Trace-Id", req.correlationId);
+    (0, logger_1.getLogger)().debug({ correlationId: req.correlationId }, "correlation ID assigned");
+    next();
 }
