@@ -111,7 +111,14 @@ export function initializeSentry(config: SentryConfig): typeof Sentry {
     profilesSampleRate,
 
     // Integrations
-    integrations: [...(profilingIntegration ? [profilingIntegration()] : [])],
+    integrations: [
+      ...(profilingIntegration ? [profilingIntegration()] : []),
+      Sentry.pinoIntegration({
+        log: {
+          levels: ["info", "warn", "error", "fatal"],
+        },
+      }),
+    ],
 
     // Data sanitization
     beforeSend(event: any, hint: any) {
