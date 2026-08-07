@@ -155,6 +155,7 @@ export function initializeSentry(config: SentryConfig): typeof Sentry {
       "ECONNRESET",
       "EPIPE",
       "ECONNREFUSED",
+      "Socket closed unexpectedly",
     ],
   });
 
