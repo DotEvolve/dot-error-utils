@@ -146,6 +146,7 @@ function initializeSentry(config) {
             "ECONNRESET",
             "EPIPE",
             "ECONNREFUSED",
+            "Socket closed unexpectedly",
         ],
     });
     // Initialise the logger singleton for this service

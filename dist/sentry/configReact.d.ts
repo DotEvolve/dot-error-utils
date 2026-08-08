@@ -10,6 +10,7 @@ export interface ReactSentryConfig {
     enableLogs?: boolean;
     sensitiveFields?: string[];
     debug?: boolean;
+    ignoreErrors?: (string | RegExp)[];
 }
 /**
  * Initialize Sentry for a React frontend application.
