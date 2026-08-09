@@ -183,7 +183,12 @@ describe("Sentry Configuration", () => {
 
       expect(Sentry.init).toHaveBeenCalledWith(
         expect.objectContaining({
-          ignoreErrors: ["ECONNRESET", "EPIPE", "ECONNREFUSED", "Socket closed unexpectedly"],
+          ignoreErrors: [
+            "ECONNRESET",
+            "EPIPE",
+            "ECONNREFUSED",
+            "Socket closed unexpectedly",
+          ],
         }),
       );
     });
