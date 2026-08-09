@@ -14,6 +14,7 @@ vi.mock("@sentry/node", () => ({
   startSpan: vi.fn((config, callback) => callback()),
   getActiveSpan: vi.fn(),
   setupExpressErrorHandler: vi.fn(),
+  pinoIntegration: vi.fn(() => ({ name: "PinoIntegration" })),
 }));
 
 // Sentry and profiling are now mocked in src/__tests__/setup.ts
@@ -182,7 +183,7 @@ describe("Sentry Configuration", () => {
 
       expect(Sentry.init).toHaveBeenCalledWith(
         expect.objectContaining({
-          ignoreErrors: ["ECONNRESET", "EPIPE", "ECONNREFUSED"],
+          ignoreErrors: ["ECONNRESET", "EPIPE", "ECONNREFUSED", "Socket closed unexpectedly"],
         }),
       );
     });
