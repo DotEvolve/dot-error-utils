@@ -78,7 +78,7 @@ function initializeReactSentry(
  * @returns {any} The any
  */
 config) {
-    const { dsn, environment = "development", release, tracesSampleRate = environment === "production" ? 1.0 : 1.0, replaysSessionSampleRate = environment === "production" ? 0.1 : 0, replaysOnErrorSampleRate = environment === "production" ? 1.0 : 1.0, profileSessionSampleRate = environment === "production" ? 1.0 : 1.0, enableLogs = false, sensitiveFields = [], debug = false, } = config;
+    const { dsn, environment = "development", release, tracesSampleRate = environment === "production" ? 1.0 : 1.0, replaysSessionSampleRate = environment === "production" ? 0.1 : 0, replaysOnErrorSampleRate = environment === "production" ? 1.0 : 1.0, profileSessionSampleRate = environment === "production" ? 1.0 : 1.0, enableLogs = false, sensitiveFields = [], debug = false, ignoreErrors = [], } = config;
     const integrations = [
         Sentry.browserTracingIntegration(),
         Sentry.browserProfilingIntegration(),
@@ -100,6 +100,7 @@ config) {
         replaysSessionSampleRate,
         replaysOnErrorSampleRate,
         profileSessionSampleRate,
+        ignoreErrors,
         // Data sanitization
         beforeSend(event, hint) {
             if (event.request?.data) {

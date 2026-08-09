@@ -12,6 +12,7 @@ export interface ReactSentryConfig {
   enableLogs?: boolean;
   sensitiveFields?: string[];
   debug?: boolean;
+  ignoreErrors?: (string | RegExp)[];
 }
 
 /**
@@ -68,6 +69,7 @@ export function initializeReactSentry(
     enableLogs = false,
     sensitiveFields = [],
     debug = false,
+    ignoreErrors = [],
   } = config;
 
   const integrations: any[] = [
@@ -95,6 +97,7 @@ export function initializeReactSentry(
     replaysSessionSampleRate,
     replaysOnErrorSampleRate,
     profileSessionSampleRate,
+    ignoreErrors,
 
     // Data sanitization
     beforeSend(event: any, hint: any) {

@@ -109,7 +109,14 @@ function initializeSentry(config) {
         tracesSampleRate,
         profilesSampleRate,
         // Integrations
-        integrations: [...(profilingIntegration ? [profilingIntegration()] : [])],
+        integrations: [
+            ...(profilingIntegration ? [profilingIntegration()] : []),
+            Sentry.pinoIntegration({
+                log: {
+                    levels: ["info", "warn", "error", "fatal"],
+                },
+            }),
+        ],
         // Data sanitization
         beforeSend(event, hint) {
             // Sanitize request data
@@ -139,6 +146,7 @@ function initializeSentry(config) {
             "ECONNRESET",
             "EPIPE",
             "ECONNREFUSED",
+            "Socket closed unexpectedly",
         ],
     });
     // Initialise the logger singleton for this service
