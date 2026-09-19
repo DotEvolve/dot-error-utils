@@ -193,7 +193,10 @@ Implement Sentry-forwarding structured logging across `@dotevolve/error-utils` f
   "waves": [
     { "id": 0, "tasks": ["1.1"] },
     { "id": 1, "tasks": ["2.1", "3.1"] },
-    { "id": 2, "tasks": ["2.2", "3.2", "3.3", "3.4", "3.5", "3.6", "3.7", "3.8"] },
+    {
+      "id": 2,
+      "tasks": ["2.2", "3.2", "3.3", "3.4", "3.5", "3.6", "3.7", "3.8"]
+    },
     { "id": 3, "tasks": ["2.3", "2.4", "5.1"] },
     { "id": 4, "tasks": ["5.2", "6.1", "7.1"] },
     { "id": 5, "tasks": ["7.2", "8.1"] },

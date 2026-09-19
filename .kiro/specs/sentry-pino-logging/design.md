@@ -6,15 +6,15 @@ This feature enhances `@dotevolve/error-utils` with Sentry-forwarding structured
 
 ### Current State
 
-| Location | Problem |
-|---|---|
-| `src/logger/index.ts` | Plain Pino singleton — no Sentry forwarding. Developers must call Sentry APIs manually. |
-| `src/react.ts` | No logger exports. React apps have no shared logging primitive. |
-| `src/browser.ts` | Does not exist. No `./browser` entry point. |
-| `src/sentry/configBrowser.ts` | Does not exist. No Service Worker-safe Sentry initializer. |
-| `background.ts` | Calls `Sentry.init` directly; has duplicate `sanitizeData`; uses `console.log`. |
-| `main.tsx` | Calls `Sentry.init` directly (second init in same extension). |
-| `errorHandler.ts` | Calls `Sentry.captureException`/`addBreadcrumb` directly from `@sentry/browser`. |
+| Location                      | Problem                                                                                 |
+| ----------------------------- | --------------------------------------------------------------------------------------- |
+| `src/logger/index.ts`         | Plain Pino singleton — no Sentry forwarding. Developers must call Sentry APIs manually. |
+| `src/react.ts`                | No logger exports. React apps have no shared logging primitive.                         |
+| `src/browser.ts`              | Does not exist. No `./browser` entry point.                                             |
+| `src/sentry/configBrowser.ts` | Does not exist. No Service Worker-safe Sentry initializer.                              |
+| `background.ts`               | Calls `Sentry.init` directly; has duplicate `sanitizeData`; uses `console.log`.         |
+| `main.tsx`                    | Calls `Sentry.init` directly (second init in same extension).                           |
+| `errorHandler.ts`             | Calls `Sentry.captureException`/`addBreadcrumb` directly from `@sentry/browser`.        |
 
 ### Design Goals
 
@@ -112,11 +112,11 @@ Configuration passed to `initializeBrowserSentry`. Intentionally excludes replay
 ```typescript
 interface BrowserSentryConfig {
   dsn: string;
-  serviceName?: string;        // default: "browser"
-  environment?: string;        // default: "production"
+  serviceName?: string; // default: "browser"
+  environment?: string; // default: "production"
   release?: string;
-  tracesSampleRate?: number;   // default: 1.0
-  sensitiveFields?: string[];  // additional fields to redact
+  tracesSampleRate?: number; // default: 1.0
+  sensitiveFields?: string[]; // additional fields to redact
 }
 ```
 
@@ -125,13 +125,13 @@ interface BrowserSentryConfig {
 The numeric Pino level values and their mapped Sentry `SeverityLevel` strings. This constant lives in `src/logger/index.ts` and drives the Sentry stream routing logic.
 
 | Pino level | Numeric value | Sentry SeverityLevel |
-|---|---|---|
-| trace | 10 | `debug` |
-| debug | 20 | `debug` |
-| info | 30 | `info` |
-| warn | 40 | `warning` |
-| error | 50 | `error` |
-| fatal | 60 | `fatal` |
+| ---------- | ------------- | -------------------- |
+| trace      | 10            | `debug`              |
+| debug      | 20            | `debug`              |
+| info       | 30            | `info`               |
+| warn       | 40            | `warning`            |
+| error      | 50            | `error`              |
+| fatal      | 60            | `fatal`              |
 
 **Routing rules**: levels ≥ 50 → `captureException`; levels 30–49 → `addBreadcrumb`; levels < 30 → silent (no Sentry call).
 
@@ -231,27 +231,44 @@ Thin Sentry wrapper that satisfies `BrowserLogger` without importing pino. Uses 
 import * as Sentry from "@sentry/react";
 import type { BrowserLogger, LogMeta } from "../types/logger";
 
-function createBrowserLogger(serviceName: string, bindings: LogMeta = {}): BrowserLogger {
+function createBrowserLogger(
+  serviceName: string,
+  bindings: LogMeta = {},
+): BrowserLogger {
   const buildExtra = (obj?: LogMeta | Error | string): LogMeta => ({
     service: serviceName,
     ...bindings,
-    ...(obj && typeof obj === "object" && !(obj instanceof Error) ? (obj as LogMeta) : {}),
+    ...(obj && typeof obj === "object" && !(obj instanceof Error)
+      ? (obj as LogMeta)
+      : {}),
   });
 
   return {
     debug(obj: LogMeta | string, msg?: string) {
       const message = typeof obj === "string" ? obj : (msg ?? "");
-      console.debug(`[${serviceName}]`, message, typeof obj === "object" ? obj : "");
+      console.debug(
+        `[${serviceName}]`,
+        message,
+        typeof obj === "object" ? obj : "",
+      );
     },
     info(obj: LogMeta | string, msg?: string) {
       const message = typeof obj === "string" ? obj : (msg ?? "");
       console.info(`[${serviceName}]`, message);
-      Sentry.addBreadcrumb({ message, level: "info", data: buildExtra(obj as LogMeta) });
+      Sentry.addBreadcrumb({
+        message,
+        level: "info",
+        data: buildExtra(obj as LogMeta),
+      });
     },
     warn(obj: LogMeta | string, msg?: string) {
       const message = typeof obj === "string" ? obj : (msg ?? "");
       console.warn(`[${serviceName}]`, message);
-      Sentry.addBreadcrumb({ message, level: "warning", data: buildExtra(obj as LogMeta) });
+      Sentry.addBreadcrumb({
+        message,
+        level: "warning",
+        data: buildExtra(obj as LogMeta),
+      });
     },
     error(obj: LogMeta | Error | string, msg?: string) {
       const message = typeof obj === "string" ? obj : (msg ?? "");
@@ -263,10 +280,16 @@ function createBrowserLogger(serviceName: string, bindings: LogMeta = {}): Brows
       const message = typeof obj === "string" ? obj : (msg ?? "");
       const error = obj instanceof Error ? obj : new Error(message);
       console.error(`[${serviceName}][FATAL]`, message, obj);
-      Sentry.captureException(error, { level: "fatal", extra: buildExtra(obj) });
+      Sentry.captureException(error, {
+        level: "fatal",
+        extra: buildExtra(obj),
+      });
     },
     child(childBindings: LogMeta): BrowserLogger {
-      return createBrowserLogger(serviceName, { ...bindings, ...childBindings });
+      return createBrowserLogger(serviceName, {
+        ...bindings,
+        ...childBindings,
+      });
     },
   };
 }
@@ -312,7 +335,9 @@ export interface BrowserSentryConfig {
   sensitiveFields?: string[];
 }
 
-export function initializeBrowserSentry(config: BrowserSentryConfig): typeof Sentry {
+export function initializeBrowserSentry(
+  config: BrowserSentryConfig,
+): typeof Sentry {
   const {
     dsn,
     serviceName = "browser",
@@ -500,7 +525,10 @@ console.log("Extension initialized");
 #### After
 
 ```typescript
-import { initializeBrowserSentry, createLogger } from "@dotevolve/error-utils/browser";
+import {
+  initializeBrowserSentry,
+  createLogger,
+} from "@dotevolve/error-utils/browser";
 
 initializeBrowserSentry({
   dsn: import.meta.env.VITE_SENTRY_DSN,
@@ -517,6 +545,7 @@ logger.info("Extension initialized");
 ```
 
 Changes:
+
 - Import `initializeBrowserSentry` and `createLogger` from `@dotevolve/error-utils/browser`.
 - Replace `Sentry.init(...)` with `initializeBrowserSentry(...)`.
 - Remove the inline `sanitizeData` function entirely — sanitization is handled inside `initializeBrowserSentry`.
@@ -541,7 +570,10 @@ Sentry.init({
 #### After
 
 ```typescript
-import { initializeReactSentry, createLogger } from "@dotevolve/error-utils/react";
+import {
+  initializeReactSentry,
+  createLogger,
+} from "@dotevolve/error-utils/react";
 
 initializeReactSentry({
   dsn: import.meta.env.VITE_SENTRY_DSN,
@@ -556,6 +588,7 @@ createLogger("govnix-mca-extension-popup");
 ```
 
 Changes:
+
 - Replace `import * as Sentry from "@sentry/react"; Sentry.init(...)` with `initializeReactSentry(...)`.
 - Call `createLogger("govnix-mca-extension-popup")` to initialize the popup logger singleton.
 - Remove direct `Sentry.init` call.
@@ -619,6 +652,7 @@ class ExtensionErrorHandler {
 ```
 
 Changes:
+
 - Import `getLogger` from `@dotevolve/error-utils/react` instead of `@sentry/browser`.
 - Replace `Sentry.captureException(...)` calls with `getLogger().error(...)`.
 - Replace `Sentry.addBreadcrumb(...)` for validation errors with `getLogger().warn(...)` — this preserves the existing intent (breadcrumb, not exception) because the browser logger maps `warn` to `Sentry.addBreadcrumb`.
@@ -736,52 +770,52 @@ All existing tests in `src/__tests__/` must continue to pass after the changes t
 
 ## Correctness Properties
 
-*A property is a characteristic or behavior that should hold true across all valid executions of a system — essentially, a formal statement about what the system should do. Properties serve as the bridge between human-readable specifications and machine-verifiable correctness guarantees.*
+_A property is a characteristic or behavior that should hold true across all valid executions of a system — essentially, a formal statement about what the system should do. Properties serve as the bridge between human-readable specifications and machine-verifiable correctness guarantees._
 
 ### Property 1: Error/fatal log levels always produce Sentry exceptions
 
-*For any* call to `logger.error(...)` or `logger.fatal(...)` on a `BrowserLogger`, a `Sentry.captureException` call SHALL occur with an `Error` object.
+_For any_ call to `logger.error(...)` or `logger.fatal(...)` on a `BrowserLogger`, a `Sentry.captureException` call SHALL occur with an `Error` object.
 
 **Validates: Requirements 1.2, 3.3**
 
 ### Property 2: Info/warn log levels always produce Sentry breadcrumbs
 
-*For any* call to `logger.info(...)` or `logger.warn(...)` on a `BrowserLogger`, a `Sentry.addBreadcrumb` call SHALL occur with the correct mapped Sentry level (`"info"` or `"warning"`).
+_For any_ call to `logger.info(...)` or `logger.warn(...)` on a `BrowserLogger`, a `Sentry.addBreadcrumb` call SHALL occur with the correct mapped Sentry level (`"info"` or `"warning"`).
 
 **Validates: Requirements 1.3, 3.4**
 
 ### Property 3: Debug log level never touches Sentry
 
-*For any* call to `logger.debug(...)`, no Sentry API (`captureException`, `addBreadcrumb`) SHALL be called.
+_For any_ call to `logger.debug(...)`, no Sentry API (`captureException`, `addBreadcrumb`) SHALL be called.
 
 **Validates: Requirements 1.4, 3.5**
 
 ### Property 4: Error instance pass-through
 
-*For any* `Error` instance passed as the first argument to `logger.error(errorInstance, msg)`, the same `Error` instance SHALL be passed directly to `Sentry.captureException` without being wrapped in a new `Error`.
+_For any_ `Error` instance passed as the first argument to `logger.error(errorInstance, msg)`, the same `Error` instance SHALL be passed directly to `Sentry.captureException` without being wrapped in a new `Error`.
 
 **Validates: Requirements 2.2**
 
 ### Property 5: String-only call wraps in Error
 
-*For any* string `msg` passed as the sole argument to `logger.error(msg)`, `Sentry.captureException` SHALL be called with `new Error(msg)`.
+_For any_ string `msg` passed as the sole argument to `logger.error(msg)`, `Sentry.captureException` SHALL be called with `new Error(msg)`.
 
 **Validates: Requirements 2.3**
 
 ### Property 6: Child logger inherits bindings
 
-*For any* `BrowserLogger` with bindings `b1` and a child created with bindings `b2`, all log calls on the child SHALL include both `b1` and `b2` in the Sentry context `extra` data.
+_For any_ `BrowserLogger` with bindings `b1` and a child created with bindings `b2`, all log calls on the child SHALL include both `b1` and `b2` in the Sentry context `extra` data.
 
 **Validates: Requirements 3.2**
 
 ### Property 7: Browser logger never imports pino
 
-*For any* execution environment (Node.js or browser), importing `src/logger/react.ts` SHALL NOT trigger a `require("pino")` or `import("pino")` call.
+_For any_ execution environment (Node.js or browser), importing `src/logger/react.ts` SHALL NOT trigger a `require("pino")` or `import("pino")` call.
 
 **Validates: Requirements 3.8, 4.3**
 
 ### Property 8: Pino level to Sentry level mapping is exhaustive
 
-*For any* Pino log record with a numeric `level` field in the range `[10, 20, 30, 40, 50, 60]`, the Sentry stream SHALL map it to a valid `SeverityLevel` value.
+_For any_ Pino log record with a numeric `level` field in the range `[10, 20, 30, 40, 50, 60]`, the Sentry stream SHALL map it to a valid `SeverityLevel` value.
 
 **Validates: Requirements 1.6**

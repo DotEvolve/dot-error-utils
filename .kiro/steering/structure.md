@@ -35,12 +35,12 @@ dist/                           # Compiled CJS/ESM output — do not edit
 
 Each entry point is a thin re-export file. **Never import across entry points** — use the one that matches the runtime.
 
-| Import path | What it provides |
-|---|---|
-| `@dotevolve/error-utils` | Core error classes and `ErrorCategory` |
-| `@dotevolve/error-utils/node` | Errors, middleware, logger, `asyncHandler`, `withTransaction`, sanitizers |
-| `@dotevolve/error-utils/express` | Same as `/node` minus the pino logger |
-| `@dotevolve/error-utils/react` | Error classes, `initializeReactSentry`, sanitizers, `@sentry/react` re-export |
+| Import path                      | What it provides                                                              |
+| -------------------------------- | ----------------------------------------------------------------------------- |
+| `@dotevolve/error-utils`         | Core error classes and `ErrorCategory`                                        |
+| `@dotevolve/error-utils/node`    | Errors, middleware, logger, `asyncHandler`, `withTransaction`, sanitizers     |
+| `@dotevolve/error-utils/express` | Same as `/node` minus the pino logger                                         |
+| `@dotevolve/error-utils/react`   | Error classes, `initializeReactSentry`, sanitizers, `@sentry/react` re-export |
 
 ## Module Responsibilities
 

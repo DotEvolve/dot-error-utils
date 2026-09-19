@@ -6,12 +6,12 @@ inclusion: always
 
 ## Core
 
-| Concern | Library | Version |
-|---|---|---|
-| Language | TypeScript | 5.3.x |
-| Runtime | Node.js | 24.x |
-| Logging | pino | 10.x |
-| Error Tracking | @sentry/node, @sentry/react, @sentry/profiling-node | 10.x |
+| Concern        | Library                                             | Version |
+| -------------- | --------------------------------------------------- | ------- |
+| Language       | TypeScript                                          | 5.3.x   |
+| Runtime        | Node.js                                             | 24.x    |
+| Logging        | pino                                                | 10.x    |
+| Error Tracking | @sentry/node, @sentry/react, @sentry/profiling-node | 10.x    |
 
 ## Build
 
@@ -31,10 +31,10 @@ inclusion: always
 
 ## Testing
 
-| Concern | Library | Version |
-|---|---|---|
-| Runner | Vitest | 1.x |
-| Property-Based | fast-check | 4.x |
+| Concern        | Library    | Version |
+| -------------- | ---------- | ------- |
+| Runner         | Vitest     | 1.x     |
+| Property-Based | fast-check | 4.x     |
 
 - Unit tests live alongside the module they test in a local `__tests__/` directory.
 - Top-level `__tests__/` is for integration tests.
