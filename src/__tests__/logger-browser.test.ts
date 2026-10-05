@@ -11,7 +11,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 // ---------------------------------------------------------------------------
 // Types only — imported at the top level (no singleton state here)
 // ---------------------------------------------------------------------------
-import type { BrowserLogger } from "../types/logger";
+import type { BrowserLogger } from "../types/logger.js";
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -27,7 +27,7 @@ async function freshModule() {
     captureException: vi.fn(),
   }));
 
-  const loggerModule = await import("../logger/react");
+  const loggerModule = await import("../logger/react.js");
   const sentryModule = await import("@sentry/react");
 
   return {

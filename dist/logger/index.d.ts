@@ -1,4 +1,4 @@
-import type { BrowserLogger } from "../types/logger";
+import type { BrowserLogger } from "../types/logger.js";
 /**
  * Create (or replace) the module-level logger singleton.
  *

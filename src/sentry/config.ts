@@ -1,6 +1,6 @@
 import * as Sentry from "@sentry/node";
-import { sanitizeData, sanitizeUrl } from "../utils/sanitizer";
-import { createLogger } from "../logger";
+import { sanitizeData, sanitizeUrl } from "../utils/sanitizer.js";
+import { createLogger } from "../logger/index.js";
 
 declare global {
   namespace Express {

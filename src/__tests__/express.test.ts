@@ -1,8 +1,8 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import express from "express";
-import { setupSentryMiddleware } from "../middleware/sentryMiddleware";
-import { correlationIdMiddleware } from "../middleware/correlationId";
-import { setupSentryErrorHandler } from "../middleware/errorHandler";
+import { setupSentryMiddleware } from "../middleware/sentryMiddleware.js";
+import { correlationIdMiddleware } from "../middleware/correlationId.js";
+import { setupSentryErrorHandler } from "../middleware/errorHandler.js";
 
 // Mock @sentry/node to avoid real Sentry calls during tests
 vi.mock("@sentry/node", () => ({

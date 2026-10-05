@@ -6,20 +6,20 @@ export {
   AuthorizationError,
   NotFoundError,
   ConflictError,
-} from "./errors/AppError";
+} from "./errors/AppError.js";
 
-export { ErrorCategory } from "./errors/ErrorCategory";
-export type { ErrorCategoryType } from "./errors/ErrorCategory";
+export { ErrorCategory } from "./errors/ErrorCategory.js";
+export type { ErrorCategoryType } from "./errors/ErrorCategory.js";
 
 // React Sentry configuration
-export { initializeReactSentry } from "./sentry/configReact";
-export type { ReactSentryConfig } from "./sentry/configReact";
+export { initializeReactSentry } from "./sentry/configReact.js";
+export type { ReactSentryConfig } from "./sentry/configReact.js";
 
 // Utilities
-export { sanitizeData, sanitizeUrl } from "./utils/sanitizer";
+export { sanitizeData, sanitizeUrl } from "./utils/sanitizer.js";
 
 // Logger (browser-safe, no pino)
-export { createLogger, getLogger } from "./logger/react";
-export type { BrowserLogger, LogMeta } from "./types/logger";
+export { createLogger, getLogger } from "./logger/react.js";
+export type { BrowserLogger, LogMeta } from "./types/logger.js";
 
 export * as Sentry from "@sentry/react";

@@ -4,7 +4,7 @@ import * as Sentry from "@sentry/node";
 import {
   setupSentryMiddleware,
   attachSentryContext,
-} from "../sentryMiddleware";
+} from "../sentryMiddleware.js";
 
 // Mock Sentry
 vi.mock("@sentry/node", () => ({

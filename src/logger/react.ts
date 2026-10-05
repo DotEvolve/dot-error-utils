@@ -1,5 +1,5 @@
 import * as Sentry from "@sentry/react";
-import type { BrowserLogger, LogMeta } from "../types/logger";
+import type { BrowserLogger, LogMeta } from "../types/logger.js";
 
 function createBrowserLogger(
   serviceName: string,

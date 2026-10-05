@@ -6,8 +6,8 @@ import {
   AuthorizationError,
   NotFoundError,
   ConflictError,
-} from "../AppError";
-import { ErrorCategory } from "../ErrorCategory";
+} from "../AppError.js";
+import { ErrorCategory } from "../ErrorCategory.js";
 
 describe("AppError", () => {
   describe("constructor", () => {

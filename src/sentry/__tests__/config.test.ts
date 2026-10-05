@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import * as Sentry from "@sentry/node";
 import { nodeProfilingIntegration } from "@sentry/profiling-node";
-import { initializeSentry, SentryConfig } from "../config";
+import { initializeSentry, SentryConfig } from "../config.js";
 
 // Mock Sentry
 vi.mock("@sentry/node", () => ({
@@ -393,7 +393,7 @@ vi.mock("@sentry/react", () => ({
 }));
 
 import * as SentryReact from "@sentry/react";
-import { initializeReactSentry, ReactSentryConfig } from "../configReact";
+import { initializeReactSentry, ReactSentryConfig } from "../configReact.js";
 
 describe("initializeReactSentry", () => {
   beforeEach(() => {

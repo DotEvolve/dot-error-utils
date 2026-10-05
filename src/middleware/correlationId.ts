@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { randomUUID } from "crypto";
-import { getLogger } from "../logger";
+import { getLogger } from "../logger/index.js";
 
 /**
  * Extend Express Request to include correlationId

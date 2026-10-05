@@ -35,7 +35,7 @@ var __importStar = (this && this.__importStar) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.initializeReactSentry = initializeReactSentry;
 const Sentry = __importStar(require("@sentry/react"));
-const sanitizer_1 = require("../utils/sanitizer");
+const sanitizer_js_1 = require("../utils/sanitizer.js");
 /**
  * Initialize Sentry for a React frontend application.
  *
@@ -104,19 +104,19 @@ config) {
         // Data sanitization
         beforeSend(event, hint) {
             if (event.request?.data) {
-                event.request.data = (0, sanitizer_1.sanitizeData)(event.request.data, sensitiveFields);
+                event.request.data = (0, sanitizer_js_1.sanitizeData)(event.request.data, sensitiveFields);
             }
             if (event.extra) {
-                event.extra = (0, sanitizer_1.sanitizeData)(event.extra, sensitiveFields);
+                event.extra = (0, sanitizer_js_1.sanitizeData)(event.extra, sensitiveFields);
             }
             return event;
         },
         beforeBreadcrumb(breadcrumb, hint) {
             if (breadcrumb.category === "http" && breadcrumb.data?.url) {
-                breadcrumb.data.url = (0, sanitizer_1.sanitizeUrl)(breadcrumb.data.url);
+                breadcrumb.data.url = (0, sanitizer_js_1.sanitizeUrl)(breadcrumb.data.url);
             }
             if (breadcrumb.data) {
-                breadcrumb.data = (0, sanitizer_1.sanitizeData)(breadcrumb.data, sensitiveFields);
+                breadcrumb.data = (0, sanitizer_js_1.sanitizeData)(breadcrumb.data, sensitiveFields);
             }
             return breadcrumb;
         },

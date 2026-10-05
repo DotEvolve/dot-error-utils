@@ -1,4 +1,4 @@
-import { AuditLogEntry, AuditLoggerConfig, AuditTransport } from "./types";
+import { AuditLogEntry, AuditLoggerConfig, AuditTransport } from "./types.js";
 
 export class ValidationError extends Error {
   constructor(message: string) {

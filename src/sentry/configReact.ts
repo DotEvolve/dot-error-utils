@@ -1,5 +1,5 @@
 import * as Sentry from "@sentry/react";
-import { sanitizeData, sanitizeUrl } from "../utils/sanitizer";
+import { sanitizeData, sanitizeUrl } from "../utils/sanitizer.js";
 
 export interface ReactSentryConfig {
   dsn: string;

@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
 import { Request, Response, NextFunction } from "express";
-import { asyncHandler } from "../asyncHandler";
+import { asyncHandler } from "../asyncHandler.js";
 
 describe("asyncHandler", () => {
   const mockRequest = () => ({}) as Request;

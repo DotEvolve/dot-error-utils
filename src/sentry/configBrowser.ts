@@ -1,6 +1,6 @@
 import * as Sentry from "@sentry/browser";
-import { sanitizeData, sanitizeUrl } from "../utils/sanitizer";
-import { createLogger } from "../logger/react";
+import { sanitizeData, sanitizeUrl } from "../utils/sanitizer.js";
+import { createLogger } from "../logger/react.js";
 
 export interface BrowserSentryConfig {
   dsn: string;

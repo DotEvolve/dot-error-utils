@@ -4,8 +4,8 @@ import {
   ValidationError,
   deserializeEntry,
   serializeEntry,
-} from "../AuditLogger";
-import { AuditLogEntry, AuditTransport } from "../types";
+} from "../AuditLogger.js";
+import { AuditLogEntry, AuditTransport } from "../types.js";
 
 describe("AuditLogger Unit Tests", () => {
   let mockTransport: ReturnType<typeof vi.fn>;

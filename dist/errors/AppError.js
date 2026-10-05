@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ConflictError = exports.NotFoundError = exports.AuthorizationError = exports.AuthenticationError = exports.ValidationError = exports.AppError = void 0;
-const ErrorCategory_1 = require("./ErrorCategory");
+const ErrorCategory_js_1 = require("./ErrorCategory.js");
 /**
  * Base application error class with Sentry integration support.
  *
@@ -67,7 +67,7 @@ class ValidationError extends AppError {
      * @param correlationId - Optional request correlation ID
      */
     constructor(message, details, correlationId) {
-        super(message, 400, ErrorCategory_1.ErrorCategory.VALIDATION, details, correlationId);
+        super(message, 400, ErrorCategory_js_1.ErrorCategory.VALIDATION, details, correlationId);
     }
 }
 exports.ValidationError = ValidationError;
@@ -87,7 +87,7 @@ class AuthenticationError extends AppError {
      * @param correlationId - Optional request correlation ID
      */
     constructor(message = "Authentication required", correlationId) {
-        super(message, 401, ErrorCategory_1.ErrorCategory.AUTHENTICATION, undefined, correlationId);
+        super(message, 401, ErrorCategory_js_1.ErrorCategory.AUTHENTICATION, undefined, correlationId);
     }
 }
 exports.AuthenticationError = AuthenticationError;
@@ -107,7 +107,7 @@ class AuthorizationError extends AppError {
      * @param correlationId - Optional request correlation ID
      */
     constructor(message = "Insufficient permissions", correlationId) {
-        super(message, 403, ErrorCategory_1.ErrorCategory.AUTHORIZATION, undefined, correlationId);
+        super(message, 403, ErrorCategory_js_1.ErrorCategory.AUTHORIZATION, undefined, correlationId);
     }
 }
 exports.AuthorizationError = AuthorizationError;
@@ -131,7 +131,7 @@ class NotFoundError extends AppError {
         const message = identifier
             ? `${resource} not found: ${identifier}`
             : `${resource} not found`;
-        super(message, 404, ErrorCategory_1.ErrorCategory.NOT_FOUND, undefined, correlationId);
+        super(message, 404, ErrorCategory_js_1.ErrorCategory.NOT_FOUND, undefined, correlationId);
     }
 }
 exports.NotFoundError = NotFoundError;
@@ -152,7 +152,7 @@ class ConflictError extends AppError {
      * @param details - Optional structured details about the conflict
      */
     constructor(message, details) {
-        super(message, 409, ErrorCategory_1.ErrorCategory.CONFLICT, details);
+        super(message, 409, ErrorCategory_js_1.ErrorCategory.CONFLICT, details);
     }
 }
 exports.ConflictError = ConflictError;

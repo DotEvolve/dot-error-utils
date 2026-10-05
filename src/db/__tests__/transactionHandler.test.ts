@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import * as Sentry from "@sentry/node";
-import { withTransaction } from "../transactionHandler";
+import { withTransaction } from "../transactionHandler.js";
 
 // Mock Sentry
 vi.mock("@sentry/node", () => ({

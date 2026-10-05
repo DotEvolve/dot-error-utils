@@ -35,8 +35,8 @@ var __importStar = (this && this.__importStar) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.initializeSentry = initializeSentry;
 const Sentry = __importStar(require("@sentry/node"));
-const sanitizer_1 = require("../utils/sanitizer");
-const logger_1 = require("../logger");
+const sanitizer_js_1 = require("../utils/sanitizer.js");
+const index_js_1 = require("../logger/index.js");
 /**
  * Initialize Sentry for a Node.js / Express service.
  *
@@ -121,22 +121,22 @@ function initializeSentry(config) {
         beforeSend(event, hint) {
             // Sanitize request data
             if (event.request?.data) {
-                event.request.data = (0, sanitizer_1.sanitizeData)(event.request.data, sensitiveFields);
+                event.request.data = (0, sanitizer_js_1.sanitizeData)(event.request.data, sensitiveFields);
             }
             // Sanitize extra context
             if (event.extra) {
-                event.extra = (0, sanitizer_1.sanitizeData)(event.extra, sensitiveFields);
+                event.extra = (0, sanitizer_js_1.sanitizeData)(event.extra, sensitiveFields);
             }
             return event;
         },
         // Breadcrumb filtering and sanitization
         beforeBreadcrumb(breadcrumb, hint) {
             if (breadcrumb.category === "http" && breadcrumb.data?.url) {
-                breadcrumb.data.url = (0, sanitizer_1.sanitizeUrl)(breadcrumb.data.url);
+                breadcrumb.data.url = (0, sanitizer_js_1.sanitizeUrl)(breadcrumb.data.url);
             }
             // Sanitize breadcrumb data
             if (breadcrumb.data) {
-                breadcrumb.data = (0, sanitizer_1.sanitizeData)(breadcrumb.data, sensitiveFields);
+                breadcrumb.data = (0, sanitizer_js_1.sanitizeData)(breadcrumb.data, sensitiveFields);
             }
             return breadcrumb;
         },
@@ -150,6 +150,6 @@ function initializeSentry(config) {
         ],
     });
     // Initialise the logger singleton for this service
-    (0, logger_1.createLogger)(serviceName);
+    (0, index_js_1.createLogger)(serviceName);
     return Sentry;
 }

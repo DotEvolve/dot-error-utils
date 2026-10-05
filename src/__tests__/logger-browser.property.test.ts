@@ -9,7 +9,7 @@ vi.mock("@sentry/react", () => ({
 
 // Import Sentry mock and logger after vi.mock is hoisted
 import * as Sentry from "@sentry/react";
-import { createLogger, getLogger } from "../logger/react";
+import { createLogger, getLogger } from "../logger/react.js";
 
 const mockCaptureException = vi.mocked(Sentry.captureException);
 const mockAddBreadcrumb = vi.mocked(Sentry.addBreadcrumb);
