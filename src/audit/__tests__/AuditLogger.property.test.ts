@@ -1,6 +1,10 @@
 import { describe, it, expect } from "vitest";
 import fc from "fast-check";
-import { AuditLogger, deserializeEntry, serializeEntry } from "../AuditLogger.js";
+import {
+  AuditLogger,
+  deserializeEntry,
+  serializeEntry,
+} from "../AuditLogger.js";
 import { AuditLogEntry, AuditTransport } from "../types.js";
 
 const auditLogEntryArb = fc.record({
