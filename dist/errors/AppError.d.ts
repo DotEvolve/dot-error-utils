@@ -1,4 +1,4 @@
-import { ErrorCategoryType } from "./ErrorCategory";
+import { ErrorCategoryType } from "./ErrorCategory.js";
 /**
  * Base application error class with Sentry integration support.
  *

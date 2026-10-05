@@ -1,5 +1,5 @@
 import { z } from "zod";
-import type { AuditLogEntry } from "./types";
+import type { AuditLogEntry } from "./types.js";
 
 export const iso8601Regex =
   /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?(Z|[+-]\d{2}:\d{2})$/;

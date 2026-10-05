@@ -1,5 +1,5 @@
 import * as Sentry from "@sentry/node";
-import { getLogger } from "../logger";
+import { getLogger } from "../logger/index.js";
 
 /**
  * Execute a Prisma database transaction with Sentry performance monitoring and

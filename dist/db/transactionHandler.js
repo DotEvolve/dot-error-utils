@@ -35,7 +35,7 @@ var __importStar = (this && this.__importStar) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.withTransaction = withTransaction;
 const Sentry = __importStar(require("@sentry/node"));
-const logger_1 = require("../logger");
+const index_js_1 = require("../logger/index.js");
 /**
  * Execute a Prisma database transaction with Sentry performance monitoring and
  * structured logging.
@@ -77,17 +77,17 @@ async function withTransaction(
 prisma, callback, operationName = "database_transaction") {
     return await Sentry.startSpan({ name: operationName, op: "db.transaction" }, async () => {
         const startMs = Date.now();
-        (0, logger_1.getLogger)().info({ operationName }, "transaction started");
+        (0, index_js_1.getLogger)().info({ operationName }, "transaction started");
         try {
             // Execute Prisma transaction
             const result = await prisma.$transaction(async (tx) => {
                 return await callback(tx);
             });
-            (0, logger_1.getLogger)().info({ operationName, durationMs: Date.now() - startMs }, "transaction completed");
+            (0, index_js_1.getLogger)().info({ operationName, durationMs: Date.now() - startMs }, "transaction completed");
             return result;
         }
         catch (error) {
-            (0, logger_1.getLogger)().error({
+            (0, index_js_1.getLogger)().error({
                 operationName,
                 err: error instanceof Error ? error.message : String(error),
             }, "transaction failed");

@@ -5,23 +5,23 @@ export {
   AuthorizationError,
   NotFoundError,
   ConflictError,
-} from "./errors/AppError";
-export { ErrorCategory } from "./errors/ErrorCategory";
-export type { ErrorCategoryType } from "./errors/ErrorCategory";
-export { correlationIdMiddleware } from "./middleware/correlationId";
+} from "./errors/AppError.js";
+export { ErrorCategory } from "./errors/ErrorCategory.js";
+export type { ErrorCategoryType } from "./errors/ErrorCategory.js";
+export { correlationIdMiddleware } from "./middleware/correlationId.js";
 export {
   errorHandlerMiddleware,
   setupSentryErrorHandler,
-} from "./middleware/errorHandler";
-export type { ErrorResponse } from "./middleware/errorHandler";
+} from "./middleware/errorHandler.js";
+export type { ErrorResponse } from "./middleware/errorHandler.js";
 export {
   setupSentryMiddleware,
   attachSentryContext,
-} from "./middleware/sentryMiddleware";
-export { initializeSentry } from "./sentry/config";
-export type { SentryConfig } from "./sentry/config";
-export { withTransaction } from "./db/transactionHandler";
-export { asyncHandler } from "./utils/asyncHandler";
-export { sanitizeData, sanitizeUrl } from "./utils/sanitizer";
+} from "./middleware/sentryMiddleware.js";
+export { initializeSentry } from "./sentry/config.js";
+export type { SentryConfig } from "./sentry/config.js";
+export { withTransaction } from "./db/transactionHandler.js";
+export { asyncHandler } from "./utils/asyncHandler.js";
+export { sanitizeData, sanitizeUrl } from "./utils/sanitizer.js";
 
-export * from "./audit";
+export * from "./audit/index.js";

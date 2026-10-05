@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.correlationIdMiddleware = correlationIdMiddleware;
 const crypto_1 = require("crypto");
-const logger_1 = require("../logger");
+const index_js_1 = require("../logger/index.js");
 /**
  * Middleware to generate or preserve correlation IDs for request tracing.
  *
@@ -42,6 +42,6 @@ req, res, next) {
     // Set response header for client
     res.setHeader("X-Correlation-Id", req.correlationId);
     res.setHeader("X-Sentry-Trace-Id", req.correlationId);
-    (0, logger_1.getLogger)().debug({ correlationId: req.correlationId }, "correlation ID assigned");
+    (0, index_js_1.getLogger)().debug({ correlationId: req.correlationId }, "correlation ID assigned");
     next();
 }

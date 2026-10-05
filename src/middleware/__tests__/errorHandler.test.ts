@@ -5,7 +5,7 @@ import * as fc from "fast-check";
 import {
   errorHandlerMiddleware,
   setupSentryErrorHandler,
-} from "../errorHandler";
+} from "../errorHandler.js";
 import {
   AppError,
   ValidationError,
@@ -13,8 +13,8 @@ import {
   AuthorizationError,
   ConflictError,
   NotFoundError,
-} from "../../errors/AppError";
-import { ErrorCategory } from "../../errors/ErrorCategory";
+} from "../../errors/AppError.js";
+import { ErrorCategory } from "../../errors/ErrorCategory.js";
 
 // Mock Sentry
 vi.mock("@sentry/node", () => ({

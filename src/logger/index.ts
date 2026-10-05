@@ -1,5 +1,5 @@
 import pino from "pino";
-import type { BrowserLogger } from "../types/logger";
+import type { BrowserLogger } from "../types/logger.js";
 
 // No-op logger used in test environments and as a fallback before initialisation
 const noopLogger = {

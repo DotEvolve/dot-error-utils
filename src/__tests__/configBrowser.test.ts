@@ -27,9 +27,9 @@ async function freshModule() {
     createLogger: vi.fn(),
   }));
 
-  const configBrowserModule = await import("../sentry/configBrowser");
+  const configBrowserModule = await import("../sentry/configBrowser.js");
   const sentryModule = await import("@sentry/browser");
-  const loggerModule = await import("../logger/react");
+  const loggerModule = await import("../logger/react.js");
 
   const sentryInit = sentryModule.init as ReturnType<typeof vi.fn>;
   const browserTracingIntegration =

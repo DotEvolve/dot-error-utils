@@ -35,8 +35,8 @@ var __importStar = (this && this.__importStar) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.initializeBrowserSentry = initializeBrowserSentry;
 const Sentry = __importStar(require("@sentry/browser"));
-const sanitizer_1 = require("../utils/sanitizer");
-const react_1 = require("../logger/react");
+const sanitizer_js_1 = require("../utils/sanitizer.js");
+const react_js_1 = require("../logger/react.js");
 function initializeBrowserSentry(config) {
     const { dsn, serviceName = "browser", environment = "production", release, tracesSampleRate = 1.0, sensitiveFields = [], } = config;
     Sentry.init({
@@ -47,24 +47,24 @@ function initializeBrowserSentry(config) {
         integrations: [Sentry.browserTracingIntegration()],
         beforeSend(event) {
             if (event.request?.data) {
-                event.request.data = (0, sanitizer_1.sanitizeData)(event.request.data, sensitiveFields);
+                event.request.data = (0, sanitizer_js_1.sanitizeData)(event.request.data, sensitiveFields);
             }
             if (event.extra) {
-                event.extra = (0, sanitizer_1.sanitizeData)(event.extra, sensitiveFields);
+                event.extra = (0, sanitizer_js_1.sanitizeData)(event.extra, sensitiveFields);
             }
             return event;
         },
         beforeBreadcrumb(breadcrumb) {
             if (breadcrumb.category === "http" && breadcrumb.data?.url) {
-                breadcrumb.data.url = (0, sanitizer_1.sanitizeUrl)(breadcrumb.data.url);
+                breadcrumb.data.url = (0, sanitizer_js_1.sanitizeUrl)(breadcrumb.data.url);
             }
             if (breadcrumb.data) {
-                breadcrumb.data = (0, sanitizer_1.sanitizeData)(breadcrumb.data, sensitiveFields);
+                breadcrumb.data = (0, sanitizer_js_1.sanitizeData)(breadcrumb.data, sensitiveFields);
             }
             return breadcrumb;
         },
     });
     // Mirror initializeSentry pattern: initialise the logger singleton immediately
-    (0, react_1.createLogger)(serviceName);
+    (0, react_js_1.createLogger)(serviceName);
     return Sentry;
 }

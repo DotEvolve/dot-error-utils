@@ -1,9 +1,9 @@
 import { Request, Response, NextFunction } from "express";
 import * as Sentry from "@sentry/node";
-import { AppError } from "../errors/AppError";
-import { ErrorCategory } from "../errors/ErrorCategory";
-import { sanitizeData } from "../utils/sanitizer";
-import { getLogger } from "../logger";
+import { AppError } from "../errors/AppError.js";
+import { ErrorCategory } from "../errors/ErrorCategory.js";
+import { sanitizeData } from "../utils/sanitizer.js";
+import { getLogger } from "../logger/index.js";
 
 /**
  * Error response structure

@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { ErrorCategory, ErrorCategoryType } from "../ErrorCategory";
+import { ErrorCategory, ErrorCategoryType } from "../ErrorCategory.js";
 
 describe("ErrorCategory", () => {
   it("should have all required categories", () => {

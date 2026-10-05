@@ -36,9 +36,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.errorHandlerMiddleware = errorHandlerMiddleware;
 exports.setupSentryErrorHandler = setupSentryErrorHandler;
 const Sentry = __importStar(require("@sentry/node"));
-const ErrorCategory_1 = require("../errors/ErrorCategory");
-const sanitizer_1 = require("../utils/sanitizer");
-const logger_1 = require("../logger");
+const ErrorCategory_js_1 = require("../errors/ErrorCategory.js");
+const sanitizer_js_1 = require("../utils/sanitizer.js");
+const index_js_1 = require("../logger/index.js");
 /**
  * Categorize error based on status code or error properties
  */
@@ -49,21 +49,21 @@ function categorizeError(error) {
     }
     // Status code mapping
     const statusMap = {
-        400: ErrorCategory_1.ErrorCategory.VALIDATION,
-        401: ErrorCategory_1.ErrorCategory.AUTHENTICATION,
-        403: ErrorCategory_1.ErrorCategory.AUTHORIZATION,
-        404: ErrorCategory_1.ErrorCategory.NOT_FOUND,
-        409: ErrorCategory_1.ErrorCategory.CONFLICT,
+        400: ErrorCategory_js_1.ErrorCategory.VALIDATION,
+        401: ErrorCategory_js_1.ErrorCategory.AUTHENTICATION,
+        403: ErrorCategory_js_1.ErrorCategory.AUTHORIZATION,
+        404: ErrorCategory_js_1.ErrorCategory.NOT_FOUND,
+        409: ErrorCategory_js_1.ErrorCategory.CONFLICT,
     };
     if (error.statusCode && statusMap[error.statusCode]) {
         return statusMap[error.statusCode];
     }
     // Network errors
     if (error.code === "ECONNREFUSED" || error.code === "ETIMEDOUT") {
-        return ErrorCategory_1.ErrorCategory.SYSTEM;
+        return ErrorCategory_js_1.ErrorCategory.SYSTEM;
     }
     // Default to system error
-    return ErrorCategory_1.ErrorCategory.SYSTEM;
+    return ErrorCategory_js_1.ErrorCategory.SYSTEM;
 }
 /**
  * Centralized error handler middleware with Sentry integration.
@@ -149,7 +149,7 @@ err, req, res, next) {
                     path: req.path,
                     method: req.method,
                     query: req.query,
-                    body: (0, sanitizer_1.sanitizeData)(req.body),
+                    body: (0, sanitizer_js_1.sanitizeData)(req.body),
                 },
             },
         });
@@ -170,12 +170,12 @@ err, req, res, next) {
         response.error.stack = err.stack;
     }
     // Add validation details if present
-    if (err.details && category === ErrorCategory_1.ErrorCategory.VALIDATION) {
+    if (err.details && category === ErrorCategory_js_1.ErrorCategory.VALIDATION) {
         response.error.details = err.details;
     }
     // Log system errors
-    if (category === ErrorCategory_1.ErrorCategory.SYSTEM) {
-        (0, logger_1.getLogger)().error({ correlationId, err: err.message }, "system error encountered");
+    if (category === ErrorCategory_js_1.ErrorCategory.SYSTEM) {
+        (0, index_js_1.getLogger)().error({ correlationId, err: err.message }, "system error encountered");
     }
     res.status(statusCode).json(response);
 }

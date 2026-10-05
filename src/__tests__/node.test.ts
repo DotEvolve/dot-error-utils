@@ -6,8 +6,8 @@ import {
   AuthorizationError,
   NotFoundError,
   ConflictError,
-} from "../errors/AppError";
-import { withTransaction } from "../db/transactionHandler";
+} from "../errors/AppError.js";
+import { withTransaction } from "../db/transactionHandler.js";
 
 // Mock @sentry/node to avoid real Sentry calls during tests
 vi.mock("@sentry/node", () => ({

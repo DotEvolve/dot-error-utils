@@ -9,7 +9,7 @@ import {
   ErrorCategory,
   initializeReactSentry,
   Sentry,
-} from "../react";
+} from "../react.js";
 
 // Mock @sentry/react to avoid real Sentry calls during tests
 vi.mock("@sentry/react", () => ({
