@@ -1,5 +1,4 @@
 version: 2
-enable-beta-ecosystems: true
 
 registries:
   github-packages:
@@ -14,7 +13,7 @@ updates:
       - github-packages
     schedule:
       interval: weekly
-    open-pull-requests-limit: 5
+    open-pull-requests-limit: 10
 
   - package-ecosystem: "github-actions"
     directory: "/"
