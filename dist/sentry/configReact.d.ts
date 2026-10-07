@@ -1,16 +1,16 @@
 import * as Sentry from "@sentry/react";
 export interface ReactSentryConfig {
-    dsn: string;
-    environment?: string;
-    release?: string;
-    tracesSampleRate?: number;
-    replaysSessionSampleRate?: number;
-    replaysOnErrorSampleRate?: number;
-    profileSessionSampleRate?: number;
-    enableLogs?: boolean;
-    sensitiveFields?: string[];
-    debug?: boolean;
-    ignoreErrors?: (string | RegExp)[];
+  dsn: string;
+  environment?: string;
+  release?: string;
+  tracesSampleRate?: number;
+  replaysSessionSampleRate?: number;
+  replaysOnErrorSampleRate?: number;
+  profileSessionSampleRate?: number;
+  enableLogs?: boolean;
+  sensitiveFields?: string[];
+  debug?: boolean;
+  ignoreErrors?: (string | RegExp)[];
 }
 /**
  * Initialize Sentry for a React frontend application.
@@ -47,10 +47,11 @@ export interface ReactSentryConfig {
  * ```
  */
 export declare function initializeReactSentry(
-/**
- * Initialize React Sentry
- *
- * @param {ReactSentryConfig} config - Configuration options
- * @returns {any} The any
- */
-config: ReactSentryConfig): typeof Sentry;
+  /**
+   * Initialize React Sentry
+   *
+   * @param {ReactSentryConfig} config - Configuration options
+   * @returns {any} The any
+   */
+  config: ReactSentryConfig,
+): typeof Sentry;

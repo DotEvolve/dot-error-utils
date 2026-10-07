@@ -1,19 +1,21 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
+var __importDefault =
+  (this && this.__importDefault) ||
+  function (mod) {
+    return mod && mod.__esModule ? mod : { default: mod };
+  };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.createLogger = createLogger;
 exports.getLogger = getLogger;
 const pino_1 = __importDefault(require("pino"));
 // No-op logger used in test environments and as a fallback before initialisation
 const noopLogger = {
-    debug: () => { },
-    info: () => { },
-    warn: () => { },
-    error: () => { },
-    fatal: () => { },
-    child: () => noopLogger,
+  debug: () => {},
+  info: () => {},
+  warn: () => {},
+  error: () => {},
+  fatal: () => {},
+  child: () => noopLogger,
 };
 let singleton = null;
 /**
@@ -27,18 +29,18 @@ let singleton = null;
  * @returns The created logger instance
  */
 function createLogger(serviceName) {
-    if (process.env.NODE_ENV === "test") {
-        singleton = noopLogger;
-        return noopLogger;
-    }
-    const pinoInstance = (0, pino_1.default)({
-        name: serviceName,
-        level: process.env.LOG_LEVEL ?? "info",
-        base: { service: serviceName },
-        timestamp: pino_1.default.stdTimeFunctions.isoTime,
-    });
-    singleton = pinoInstance;
-    return singleton;
+  if (process.env.NODE_ENV === "test") {
+    singleton = noopLogger;
+    return noopLogger;
+  }
+  const pinoInstance = (0, pino_1.default)({
+    name: serviceName,
+    level: process.env.LOG_LEVEL ?? "info",
+    base: { service: serviceName },
+    timestamp: pino_1.default.stdTimeFunctions.isoTime,
+  });
+  singleton = pinoInstance;
+  return singleton;
 }
 /**
  * Return the current logger singleton.
@@ -49,5 +51,5 @@ function createLogger(serviceName) {
  * @returns The active logger (or a no-op fallback)
  */
 function getLogger() {
-    return singleton ?? noopLogger;
+  return singleton ?? noopLogger;
 }
