@@ -13,25 +13,31 @@ import { ErrorCategoryType } from "./ErrorCategory.js";
  * ```
  */
 export declare class AppError extends Error {
-    readonly statusCode: number;
-    readonly category: ErrorCategoryType;
-    readonly details: any;
-    readonly isOperational: boolean;
-    readonly correlationId?: string;
-    /**
-     * @param message - Human-readable error description
-     * @param statusCode - HTTP status code to return to the client
-     * @param category - Error category from {@link ErrorCategory}
-     * @param details - Optional structured details (e.g. field-level validation errors)
-     * @param correlationId - Optional request correlation ID for tracing
-     */
-    constructor(message: string, statusCode: number, category: ErrorCategoryType, details?: any, correlationId?: string);
-    /**
-     * Serialize error details for Sentry context.
-     *
-     * @returns A plain object suitable for `Sentry.setContext()`
-     */
-    toSentryContext(): Record<string, any>;
+  readonly statusCode: number;
+  readonly category: ErrorCategoryType;
+  readonly details: any;
+  readonly isOperational: boolean;
+  readonly correlationId?: string;
+  /**
+   * @param message - Human-readable error description
+   * @param statusCode - HTTP status code to return to the client
+   * @param category - Error category from {@link ErrorCategory}
+   * @param details - Optional structured details (e.g. field-level validation errors)
+   * @param correlationId - Optional request correlation ID for tracing
+   */
+  constructor(
+    message: string,
+    statusCode: number,
+    category: ErrorCategoryType,
+    details?: any,
+    correlationId?: string,
+  );
+  /**
+   * Serialize error details for Sentry context.
+   *
+   * @returns A plain object suitable for `Sentry.setContext()`
+   */
+  toSentryContext(): Record<string, any>;
 }
 /**
  * Validation error (HTTP 400).
@@ -45,12 +51,16 @@ export declare class AppError extends Error {
  * ```
  */
 export declare class ValidationError extends AppError {
-    /**
-     * @param message - Summary of the validation failure
-     * @param details - Map of field names to arrays of error strings
-     * @param correlationId - Optional request correlation ID
-     */
-    constructor(message: string, details?: Record<string, string[]>, correlationId?: string);
+  /**
+   * @param message - Summary of the validation failure
+   * @param details - Map of field names to arrays of error strings
+   * @param correlationId - Optional request correlation ID
+   */
+  constructor(
+    message: string,
+    details?: Record<string, string[]>,
+    correlationId?: string,
+  );
 }
 /**
  * Authentication error (HTTP 401).
@@ -63,11 +73,11 @@ export declare class ValidationError extends AppError {
  * ```
  */
 export declare class AuthenticationError extends AppError {
-    /**
-     * @param message - Error description (default: `"Authentication required"`)
-     * @param correlationId - Optional request correlation ID
-     */
-    constructor(message?: string, correlationId?: string);
+  /**
+   * @param message - Error description (default: `"Authentication required"`)
+   * @param correlationId - Optional request correlation ID
+   */
+  constructor(message?: string, correlationId?: string);
 }
 /**
  * Authorization error (HTTP 403).
@@ -80,11 +90,11 @@ export declare class AuthenticationError extends AppError {
  * ```
  */
 export declare class AuthorizationError extends AppError {
-    /**
-     * @param message - Error description (default: `"Insufficient permissions"`)
-     * @param correlationId - Optional request correlation ID
-     */
-    constructor(message?: string, correlationId?: string);
+  /**
+   * @param message - Error description (default: `"Insufficient permissions"`)
+   * @param correlationId - Optional request correlation ID
+   */
+  constructor(message?: string, correlationId?: string);
 }
 /**
  * Not-found error (HTTP 404).
@@ -97,12 +107,12 @@ export declare class AuthorizationError extends AppError {
  * ```
  */
 export declare class NotFoundError extends AppError {
-    /**
-     * @param resource - Name of the resource type (e.g. `"Tenant"`)
-     * @param identifier - Optional identifier that was looked up
-     * @param correlationId - Optional request correlation ID
-     */
-    constructor(resource: string, identifier?: string, correlationId?: string);
+  /**
+   * @param resource - Name of the resource type (e.g. `"Tenant"`)
+   * @param identifier - Optional identifier that was looked up
+   * @param correlationId - Optional request correlation ID
+   */
+  constructor(resource: string, identifier?: string, correlationId?: string);
 }
 /**
  * Conflict error (HTTP 409).
@@ -116,9 +126,9 @@ export declare class NotFoundError extends AppError {
  * ```
  */
 export declare class ConflictError extends AppError {
-    /**
-     * @param message - Description of the conflict
-     * @param details - Optional structured details about the conflict
-     */
-    constructor(message: string, details?: any);
+  /**
+   * @param message - Description of the conflict
+   * @param details - Optional structured details about the conflict
+   */
+  constructor(message: string, details?: any);
 }
