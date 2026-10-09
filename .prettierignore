@@ -1,0 +1,10 @@
+# Ignore build outputs
+dist/
+build/
+
+# Ignore specific files
+config.js
+generated-schema.json
+
+# Ignore all HTML files in a specific folder
+public/*.html
