@@ -19,7 +19,7 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: Check Formatting
-        run: npx prettier --check . --ignore-unknown
+        run: npx prettier --check . --ignore-unknown --ignore-path .prettierignore
       - name: Run tests
         run: npm test
       - name: Build package
